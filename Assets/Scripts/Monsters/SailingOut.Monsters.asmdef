@@ -1,0 +1,15 @@
+{
+  "name": "SailingOut.Monsters",
+  "rootNamespace": "SailingOut.Monsters",
+  "references": ["SailingOut.Core"],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
+
