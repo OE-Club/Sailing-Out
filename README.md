@@ -17,3 +17,7 @@ Open the folder with Unity `6000.6.1f1`. Open `Assets/Scenes/Main.unity` and pre
 Use `GameSession.Instance` for run lifecycle and subscribe to `StateChanged` when a module needs to react to pause, restart, or game over. Use the interfaces in `Assets/Scripts/Core/Contracts/` for interactions between modules. Do not reach into another module's private fields.
 
 The starter framework does not include gameplay behavior, prefabs, art, or input bindings. Those belong to the module owners listed in `agents.me`.
+
+## Infinite sea
+
+`InfiniteSeaGenerator` in `Assets/Scripts/Spawning/` creates a procedural 2D water tile and keeps a reusable grid centered around the main camera (or an explicitly assigned target). It defaults to a 7x5 grid and repositions existing tiles when the target crosses a tile boundary, so movement does not allocate an unbounded number of GameObjects. Tune the grid, tile size, colors, and wave shape on the `Infinite Sea` object in `Main.unity`.
