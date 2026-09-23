@@ -1,0 +1,499 @@
+# AGENTS.md
+
+## Project Purpose
+
+This is a small **2D Unity team project** used to practice collaborative development with Git and Codex.
+
+The project currently contains three primary gameplay modules:
+
+* Random Object Generation
+* Player Movement
+* Sea Monster Chase Logic
+
+Keep the project small, modular, and easy to integrate.
+
+Do not over-engineer the project.
+
+---
+
+# 1. Read Before Editing
+
+Before modifying files:
+
+1. Read `AGENTS.md`.
+2. Read `README.md`.
+3. Identify which module owns the task.
+4. Inspect the relevant existing code.
+5. Keep changes limited to the requested task.
+6. Avoid modifying another developer's module unless required.
+7. Use public interfaces for cross-module communication whenever possible.
+
+---
+
+# 2. Module Ownership
+
+## Random Object Generation
+
+**Owner: ChipsDish**
+
+Primary directory:
+
+```text
+Assets/Scripts/Spawning/
+```
+
+Responsibilities:
+
+* Random object spawning
+* Spawn positions
+* Spawn intervals
+* Spawn probability
+* Spawn limits
+* Spawn validation
+* Spawned object cleanup
+
+Only **ChipsDish** should make major architectural changes to this module unless coordination is required.
+
+Other agents should not rewrite or restructure this module without a clear reason.
+
+---
+
+## Player Movement
+
+**Owner: ccchh4rr**
+
+Primary directory:
+
+```text
+Assets/Scripts/Player/
+```
+
+Responsibilities:
+
+* Player input
+* Player movement
+* Movement speed
+* Collision-related movement
+* Player direction
+* Movement states
+* Movement-related animation parameters
+
+Only **ccchh4rr** should make major architectural changes to the player movement system unless coordination is required.
+
+Other modules must not directly manipulate internal player movement state.
+
+Prefer public interfaces such as:
+
+```csharp
+player.ApplyKnockback(force);
+player.Teleport(position);
+```
+
+---
+
+## Sea Monster Chase Logic
+
+**Owner: lrxlike**
+
+Primary directory:
+
+```text
+Assets/Scripts/Monsters/
+```
+
+Responsibilities:
+
+* Player detection
+* Monster movement
+* Chase behavior
+* Attack behavior
+* Chase range
+* Attack range
+* Losing the player
+* Monster state transitions
+* Monster targeting
+
+Only **lrxlike** should make major architectural changes to the sea monster system unless coordination is required.
+
+The sea monster should interact with the player through public interfaces rather than modifying player movement internals.
+
+---
+
+# 3. Module Boundaries
+
+Respect module ownership.
+
+Do not modify another module's internal implementation unless the task genuinely requires it.
+
+Preferred architecture:
+
+```text
+Sea Monster
+    ↓
+Player Public Interface
+    ↓
+Player Internal Logic
+```
+
+Avoid:
+
+```text
+Sea Monster
+    ↓
+Directly modifies PlayerMovement fields
+```
+
+Likewise, the spawning system should not directly control player movement or monster AI.
+
+---
+
+# 4. Public Interfaces
+
+Cross-module interactions should use stable public methods, properties, or events.
+
+Examples:
+
+```csharp
+player.ApplyKnockback(Vector2 force);
+player.TakeDamage(int amount);
+
+monster.SetTarget(Transform target);
+
+spawner.SpawnObject();
+```
+
+Do not casually:
+
+* Rename public methods
+* Remove public methods
+* Change public method parameters
+* Change shared behavior
+
+If a public interface changes, update every caller.
+
+---
+
+# 5. Scope of Changes
+
+Only modify files required for the current task.
+
+Do not:
+
+* Refactor unrelated code
+* Rewrite another developer's system
+* Rename large numbers of files
+* Move folders unnecessarily
+* Change the overall architecture without coordination
+* Create duplicate systems
+* Modify unrelated Scenes or Prefabs
+* Change project-wide settings without a clear reason
+
+Report unrelated problems instead of automatically fixing them.
+
+---
+
+# 6. Unity Rules
+
+This is a **2D Unity project**.
+
+Prefer:
+
+```text
+Rigidbody2D
+Collider2D
+Physics2D
+SpriteRenderer
+Animator
+Tilemap
+```
+
+Do not accidentally use 3D physics components unless explicitly required.
+
+Use:
+
+```csharp
+Update()
+```
+
+for input and non-physics frame logic.
+
+Use:
+
+```csharp
+FixedUpdate()
+```
+
+for Rigidbody2D physics logic where appropriate.
+
+Avoid expensive scene searches every frame.
+
+---
+
+# 7. Git Workflow
+
+Do not develop major features directly on `main`.
+
+Recommended branches:
+
+```text
+feature/random-object-generation
+feature/player-movement
+feature/sea-monster-chase
+```
+
+Each branch should focus on one primary feature.
+
+Recommended workflow:
+
+```text
+Create branch
+↓
+Implement
+↓
+Test
+↓
+Review changed files
+↓
+Commit
+↓
+Push
+↓
+Create Pull Request
+↓
+Review
+↓
+Merge
+```
+
+---
+
+# 8. Git Safety
+
+Do not casually:
+
+```text
+force push
+hard reset
+rewrite Git history
+delete remote branches
+remove another developer's work
+```
+
+Never overwrite another developer's changes simply because they are outside the current task.
+
+---
+
+# 9. Git LFS
+
+Git LFS must be enabled for large binary assets.
+
+Run:
+
+```bash
+git lfs install
+```
+
+After cloning:
+
+```bash
+git lfs pull
+```
+
+Large binary files may include:
+
+```text
+.psd
+.wav
+.mp3
+.mp4
+.blend
+.fbx
+```
+
+Do not automatically move Unity text-based files such as:
+
+```text
+.unity
+.prefab
+.mat
+```
+
+into Git LFS.
+
+Do not modify `.gitattributes` or rewrite LFS history without a clear reason.
+
+---
+
+# 10. Scene and Prefab Safety
+
+Be careful when editing:
+
+```text
+.unity
+.prefab
+```
+
+Multiple developers should avoid editing the same Scene or Prefab simultaneously when possible.
+
+Do not make unrelated Scene changes while implementing a code task.
+
+Report all Scene and Prefab modifications when completing a task.
+
+---
+
+# 11. Testing
+
+Before considering a task complete:
+
+1. Confirm the Unity project opens.
+2. Check the Unity Console for new errors.
+3. Test the requested feature.
+4. Test related existing behavior.
+5. Check for obvious regressions.
+6. Check for obvious performance problems.
+7. Verify unrelated modules still work.
+8. Confirm no unnecessary files were modified.
+
+Never claim a test passed if it was not actually run.
+
+---
+
+# 12. Spawning Rules
+
+**Owner: ChipsDish**
+
+The spawning system must consider:
+
+* Maximum active objects
+* Valid spawn positions
+* Spawn intervals
+* Spawn probability
+* Cleanup
+* Duplicate spawning
+* Performance
+
+Avoid unlimited spawning.
+
+Use object pooling if repeated creation and destruction becomes a performance problem.
+
+---
+
+# 13. Player Movement Rules
+
+**Owner: ccchh4rr**
+
+The player movement module owns:
+
+* Player input
+* Movement calculations
+* Rigidbody2D movement
+* Movement state
+* Movement-related collision handling
+
+Other modules must not directly modify internal movement variables.
+
+Use public player APIs instead.
+
+---
+
+# 14. Sea Monster Rules
+
+**Owner: lrxlike**
+
+The sea monster module owns:
+
+* Detection
+* Target selection
+* Chase behavior
+* Attack behavior
+* Monster movement
+* Monster states
+
+The sea monster system must not take ownership of player movement or spawning logic.
+
+---
+
+# 15. Code Quality
+
+Code should be:
+
+* Readable
+* Simple
+* Maintainable
+* Consistent
+* Modular
+
+Use meaningful names.
+
+Prefer:
+
+```csharp
+chaseSpeed
+spawnInterval
+currentTarget
+```
+
+Avoid:
+
+```csharp
+a
+temp2
+thing
+dataX
+```
+
+Do not create unnecessary abstractions for hypothetical future features.
+
+---
+
+# 16. Completion Report
+
+After completing a task, report:
+
+```text
+Completed:
+- What was implemented
+
+Modified:
+- Files changed
+
+Module Owner:
+- Responsible developer
+
+Public Interfaces:
+- Added or changed APIs
+
+Other Modules:
+- Whether other modules were affected
+
+Scenes / Prefabs:
+- Any Scene or Prefab changes
+
+Git LFS:
+- Any LFS changes
+
+Testing:
+- Tests actually performed
+
+Known Issues:
+- Remaining problems
+```
+
+---
+
+# 17. Core Rules
+
+1. Respect module ownership.
+2. ChipsDish owns Random Object Generation.
+3. ccchh4rr owns Player Movement.
+4. lrxlike owns Sea Monster Chase Logic.
+5. Keep tasks focused.
+6. Prefer public interfaces between modules.
+7. Do not rewrite unrelated systems.
+8. Do not create duplicate systems.
+9. Test changes before completion.
+10. Keep `main` stable.
+11. Use Git LFS correctly.
+12. Be careful with Scenes and Prefabs.
+13. Never fabricate test results.
+14. Prefer a small working solution over a large complicated solution.
