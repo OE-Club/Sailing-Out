@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+updates=$(cat)
+while read -r local_ref local_oid remote_ref remote_oid; do
+    if [ "$remote_ref" = refs/heads/main ]; then
+        printf '%s\n' 'Blocked: pushes to main are prohibited, including deletion and force pushes. Push a task branch and merge through a pull request.' >&2
+        exit 1
+    fi
+done <<EOF
+$updates
+EOF
+
+command -v git-lfs >/dev/null 2>&1 || {
+    printf '%s\n' 'Git LFS is required. Install it and run git lfs install --skip-repo.' >&2
+    exit 2
+}
+printf '%s\n' "$updates" | git lfs pre-push "$@"

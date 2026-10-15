@@ -231,11 +231,32 @@ Avoid expensive scene searches every frame.
 
 # 7. Git Workflow
 
-Do not develop major features directly on `main`.
+Before starting a task, run `git fetch origin`.
+
+Create new task branches from the latest `origin/main`. For existing task branches, sync with the latest fetched `origin/main` as needed for integration.
+
+Prefer small, focused commits, push task branches promptly, and integrate into `main` early and frequently through Pull Requests.
+
+All changes must use a separate branch and a Pull Request targeting `main`, including small fixes, documentation, and configuration changes.
+
+Never commit, merge locally, or push directly to `main`. Integrate changes only through GitHub's Pull Request merge flow.
+
+Before committing or pushing, ensure the reviewed repository hooks are installed and enabled. For initial setup or reviewed hook updates, run this from a trusted checkout:
+
+```bash
+sh scripts/install-git-hooks.sh
+```
+
+The installer copies the hooks into Git's common metadata directory, outside branch-controlled files, and configures an absolute `core.hooksPath`. Keep that installed path enabled across branches and worktrees. Do not rerun an unreviewed installer or point `core.hooksPath` at `.githooks`.
+
+The hooks reject local updates to `refs/heads/main`, including cherry-picks and fast-forward merges, and reject pushes targeting remote `main`. Start and sync task branches using `origin/main`; local `main` remains protected.
+
+Do not bypass the hooks with `--no-verify`, an alternate hooks path, or direct API updates to `main`.
 
 Recommended branches:
 
 ```text
+codex/<task>
 feature/random-object-generation
 feature/player-movement
 feature/sea-monster-chase
@@ -243,10 +264,12 @@ feature/sea-monster-chase
 
 Each branch should focus on one primary feature.
 
-Recommended workflow:
+Required workflow:
 
 ```text
-Create branch
+Fetch origin
+↓
+Create task branch from origin/main
 ↓
 Implement
 ↓
@@ -290,8 +313,10 @@ Git LFS must be enabled for large binary assets.
 Run:
 
 ```bash
-git lfs install
+git lfs install --skip-repo
 ```
+
+The installed repository pre-push hook calls Git LFS. Use `--skip-repo` to configure LFS filters without replacing the reviewed hooks.
 
 After cloning:
 
@@ -443,6 +468,10 @@ dataX
 ```
 
 Do not create unnecessary abstractions for hypothetical future features.
+
+## Code Reviews
+
+代码审查必须使用中文撰写，包括审查摘要、问题说明和修改建议；代码标识符、文件路径和命令保持原样。
 
 ---
 
