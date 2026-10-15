@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+case "${1:-}" in
+    preparing|prepared) ;;
+    *) exit 0 ;;
+esac
+
+while read -r old_value new_value ref_name; do
+    if [ "$ref_name" = refs/heads/main ] && [ "$old_value" != "$new_value" ]; then
+        printf '%s\n' 'Blocked: local updates to main are prohibited. Use a task branch based on origin/main and merge through a pull request.' >&2
+        exit 1
+    fi
+done
