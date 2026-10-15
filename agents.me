@@ -231,7 +231,17 @@ Avoid expensive scene searches every frame.
 
 # 7. Git Workflow
 
-Do not develop major features directly on `main`.
+All changes must use a separate branch and a Pull Request targeting `main`, including small fixes, documentation, and configuration changes.
+
+Never commit, merge locally, or push directly to `main`. Integrate changes only through GitHub's Pull Request merge flow.
+
+Before committing or pushing, enable the repository hooks:
+
+```bash
+git config --local core.hooksPath .githooks
+```
+
+Do not bypass the hooks with `--no-verify`, an alternate hooks path, or direct API updates to `main`.
 
 Recommended branches:
 
@@ -243,7 +253,7 @@ feature/sea-monster-chase
 
 Each branch should focus on one primary feature.
 
-Recommended workflow:
+Required workflow:
 
 ```text
 Create branch

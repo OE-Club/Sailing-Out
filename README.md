@@ -8,6 +8,20 @@ Unity 6.1 2D prototype. The project is intentionally small and split into three 
 
 The shared runtime lives in `Assets/Scripts/Core/`. It owns only the application lifecycle, run state, and cross-module contracts. Gameplay modules should depend on Core, but Core must not depend on gameplay modules.
 
+## Required pull request workflow
+
+Every change must go through a separate branch and a pull request targeting `main`, including fixes, documentation, and configuration. Merge through GitHub's PR merge flow.
+
+After cloning, enable the repository hooks:
+
+```bash
+git config --local core.hooksPath .githooks
+```
+
+The hooks block commits and local merge commits on `main`, and reject any push whose destination is `main` (including explicit refspecs, force pushes, and deletion). Create a task branch before changing files; Codex branches use `codex/<task>`. Do not bypass the hooks.
+
+GitHub also enforces this workflow through the active `Require pull requests for main` ruleset on the default branch (`main`), with no bypass actors. Direct pushes, force pushes, and branch deletion are blocked. A PR is required; an approving review is not required. Local hooks must be enabled separately in each clone.
+
 ## Open and run
 
 Open the folder with Unity `6000.6.1f1`. Open `Assets/Scenes/Main.unity` and press Play. The scene contains the `GameBootstrap` and `GameSession` runtime objects; the scene is deliberately empty so each module owner can add their own content without merge conflicts.
