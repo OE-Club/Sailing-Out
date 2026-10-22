@@ -1,0 +1,9 @@
+{
+  "name": "SailingOut.Sailing",
+  "rootNamespace": "SailingOut.Sailing",
+  "references": [
+    "SailingOut.Core",
+    "Unity.InputSystem"
+  ],
+  "autoReferenced": true
+}

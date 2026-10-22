@@ -1,0 +1,13 @@
+{
+  "name": "SailingOut.EditModeTests",
+  "references": [
+    "SailingOut.Sailing",
+    "SailingOut.Core"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

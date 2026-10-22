@@ -4,6 +4,12 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/FreeSailing.unity
+    guid: 31a645c3ea2355a69dc1b87ff2f6ad2c
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 3b7abedfc0124ce4e8f1b7c8b15d2d7b
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

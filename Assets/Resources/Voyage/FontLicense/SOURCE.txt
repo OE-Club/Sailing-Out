@@ -1,0 +1,6 @@
+SailingOutUI.ttf is a static weight-400 subset of Noto Sans SC, renamed Sailing Out UI.
+Original: https://github.com/google/fonts/tree/main/ofl/notosanssc
+Source font: NotoSansSC[wght].ttf, retrieved 2026-10-22.
+License: SIL Open Font License 1.1; original copyright and license are retained in OFL.txt.
+Subset characters: all current SailingVoyage player UI strings, ASCII and required punctuation.
+Regenerate the subset if new Chinese UI characters are added.
