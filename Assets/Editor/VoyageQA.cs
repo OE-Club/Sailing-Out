@@ -16,12 +16,17 @@ namespace SailingOut.Editor
         static bool orientationApplied;
         static string pendingCapture;
         static SailingVoyage voyage;
+        static Func<bool> confirmSceneSave = EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo;
         static Vector2 pausedPosition;
         static string folder => Path.GetFullPath("Logs/FreeSailingQA");
         static VoyageQA() { EditorApplication.playModeStateChanged += Changed; }
         [MenuItem("Sailing Out/Run seated free sailing QA")]
         public static void Start()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            { Debug.LogWarning("Stop Play Mode before starting voyage QA."); return; }
+            if (!confirmSceneSave()) return;
+            ResetRunState();
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, "interactive.txt"), "Started seated free sailing Play Mode QA\n");
             SessionState.SetBool(Key, true);
@@ -33,8 +38,25 @@ namespace SailingOut.Editor
         static void Changed(PlayModeStateChange state)
         {
             if (state == PlayModeStateChange.EnteredPlayMode && SessionState.GetBool(Key, false))
-            { phase = 0; started = phaseStarted = EditorApplication.timeSinceStartup; EditorApplication.update += Tick; }
-            if (state == PlayModeStateChange.ExitingPlayMode) EditorApplication.update -= Tick;
+            {
+                ResetRunState();
+                EditorApplication.update -= Tick;
+                EditorApplication.update += Tick;
+            }
+            if (state == PlayModeStateChange.ExitingPlayMode)
+            {
+                EditorApplication.update -= Tick;
+                SessionState.SetBool(Key, false);
+            }
+        }
+        static void ResetRunState()
+        {
+            voyage = null;
+            pendingCapture = null;
+            pausedPosition = default;
+            orientationApplied = false;
+            phase = 0;
+            started = phaseStarted = EditorApplication.timeSinceStartup;
         }
         static void Log(string text) { File.AppendAllText(Path.Combine(folder, "interactive.txt"), text + "\n"); Debug.Log("Free Sailing QA: " + text); }
         static void Check(bool ok, string text) { if (!ok) throw new Exception(text); Log("PASS " + text); }
@@ -50,12 +72,12 @@ namespace SailingOut.Editor
             try
             {
                 if (!EditorApplication.isPlaying) return;
-                voyage ??= UnityEngine.Object.FindAnyObjectByType<SailingVoyage>();
+                if (EditorApplication.timeSinceStartup - started > 40) throw new Exception("QA timed out.");
+                if (voyage == null) voyage = UnityEngine.Object.FindAnyObjectByType<SailingVoyage>();
                 if (voyage == null) return;
                 if (pendingCapture != null)
                 { if (!File.Exists(pendingCapture)) return; pendingCapture = null; }
                 double elapsed = EditorApplication.timeSinceStartup - phaseStarted;
-                if (EditorApplication.timeSinceStartup - started > 40) throw new Exception("QA timed out.");
                 switch (phase)
                 {
                     case 0:
