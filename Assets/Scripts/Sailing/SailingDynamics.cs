@@ -3,14 +3,15 @@ using UnityEngine;
 namespace SailingOut.Sailing
 {
     /// <summary>Local 2D vessel state. Heading is clockwise from north; wind points where air travels.</summary>
+    [System.Serializable]
     public sealed class SailingDynamics
     {
         public const float MaximumSpeed = 3.8f;
-        public Vector2 Position { get; private set; }
-        public float Heading { get; private set; }
-        public float Speed { get; private set; }
-        public float Sheet { get; private set; } = 0.55f;
-        public float WindHeading { get; set; } = 65f;
+        [field: SerializeField] public Vector2 Position { get; private set; }
+        [field: SerializeField] public float Heading { get; private set; }
+        [field: SerializeField] public float Speed { get; private set; }
+        [field: SerializeField] public float Sheet { get; private set; } = 0.55f;
+        [field: SerializeField] public float WindHeading { get; set; } = 65f;
         public Vector2 Forward => Direction(Heading);
         public Vector2 Wind => Direction(WindHeading);
         public float OffWind => Vector2.Angle(Forward, Wind);

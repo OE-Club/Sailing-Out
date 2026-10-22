@@ -11,6 +11,7 @@ namespace SailingOut.Core
     {
         public static GameSession Instance { get; private set; }
 
+        [field: SerializeField, HideInInspector]
         public GameState State { get; private set; } = GameState.Booting;
 
         public event Action<GameState, GameState> StateChanged;
@@ -25,6 +26,15 @@ namespace SailingOut.Core
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void OnEnable()
+        {
+            // Awake does not run again after a Play Mode script reload.
+            if (Instance == null)
+            {
+                Instance = this;
+            }
         }
 
         private void Start()
