@@ -65,7 +65,7 @@ class UnityProjectChecksTests(unittest.TestCase):
 
     def test_broken_reference_and_build_scene_guid(self):
         self.write("Assets/Scenes/Test.unity", "guid: " + "b" * 32)
-        self.write("ProjectSettings/EditorBuildSettings.asset", "path: Assets/Scenes/Test.unity\n guid: " + "c" * 32)
+        self.write("ProjectSettings/EditorBuildSettings.asset", "m_Scenes:\n- enabled: 1\n  path: Assets/Scenes/Test.unity\n  guid: " + "c" * 32)
         errors = self.errors()
         self.assertTrue(any("unresolved GUID" in e for e in errors))
         self.assertTrue(any("scene path/GUID mismatch" in e for e in errors))
@@ -82,6 +82,37 @@ class UnityProjectChecksTests(unittest.TestCase):
         errors = self.errors()
         for expected in ("version/revision", "unresolved project assembly", "TestAssemblies", "Editor-only"):
             self.assertTrue(any(expected in e for e in errors), expected)
+
+    def test_each_mode_requires_a_valid_root_test_assembly(self):
+        for mode in ("EditMode", "PlayMode"):
+            with self.subTest(mode=mode):
+                asm = f"Assets/Tests/{mode}/Tests.asmdef"
+                original = (self.root / asm).read_text()
+                for suffix in ("", ".meta"):
+                    self.files.remove(asm + suffix)
+                # The .cs source and the other mode's valid assembly still exist.
+                self.assertTrue(any(f"Assets/Tests/{mode}: requires a valid test .asmdef" in e for e in self.errors()))
+                for suffix in ("", ".meta"):
+                    self.files.add(asm + suffix)
+                self.write(asm, json.dumps({"name": f"SailingOut.{mode}", "includePlatforms": ["Editor"] if mode == "EditMode" else []}))
+                self.assertTrue(any("requires a valid test .asmdef" in e for e in self.errors()))
+                self.write(asm, original)
+
+    def test_malformed_scene_is_not_hidden_by_a_valid_scene(self):
+        original = (self.root / "ProjectSettings/EditorBuildSettings.asset").read_text() + "\n"
+        for fields in (
+            "  path: Assets/Scenes/Test.unity\n", # Missing GUID.
+            "  path: Assets/Scenes/Test.unity\n  guid: not-a-guid\n",
+            "  path: Assets/Scenes/Test.asset\n  guid: " + self.scene_guid + "\n",
+        ):
+            with self.subTest(fields=fields):
+                self.write("ProjectSettings/EditorBuildSettings.asset", original + "- enabled: 1\n" + fields)
+                self.assertTrue(any("scene 2 has missing or invalid" in e for e in self.errors()))
+
+    def test_scene_list_stops_before_other_build_settings(self):
+        path = self.root / "ProjectSettings/EditorBuildSettings.asset"
+        self.write("ProjectSettings/EditorBuildSettings.asset", path.read_text() + "\nm_configObjects:\n- unrelated: setting\n")
+        self.assertEqual(self.errors(), [])
 
 
 if __name__ == "__main__":

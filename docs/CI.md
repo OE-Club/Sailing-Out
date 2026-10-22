@@ -6,7 +6,7 @@
 and manual dispatches. Its job is explicitly named **Repository checks (not
 Unity tests)**. It performs real checks and fails when a check fails:
 
-- GitHub Actions workflow syntax with actionlint 1.7.12, downloaded from its
+- All GitHub Actions workflows' syntax with actionlint 1.7.12, downloaded from its
   official release and verified against a pinned SHA-256 digest.
 - Tracked asset/folder `.meta` coverage, orphan metadata, valid unique GUIDs,
   serialized GUID references and build-scene path/GUID agreement.
@@ -28,6 +28,11 @@ or Unity built-ins. A new package-owned GUID will fail as unresolved until its
 source and package-aware validation are explicitly added; unknown GUIDs are
 not silently ignored. Importer behavior, subasset file IDs and C# compilation
 remain the Editor's responsibility.
+
+Each test mode requires a valid test `.asmdef` at its directory root, and every
+`m_Scenes` list entry is validated, including disabled or malformed entries.
+Actionlint discovers all `.yml` and `.yaml` workflows instead of checking only
+the CI workflow itself.
 
 ## Security and cost
 

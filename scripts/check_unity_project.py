@@ -22,6 +22,33 @@ def tracked_files(root):
     ).decode("utf-8").rstrip("\0").split("\0")) - {""}
 
 
+def build_scene_entries(build):
+    """Enumerate the Unity m_Scenes list before validating any scalar values."""
+    entries = []
+    section_indent = None
+    for line in build.splitlines():
+        stripped = line.strip()
+        indent = len(line) - len(line.lstrip())
+        if section_indent is None:
+            if stripped.startswith("m_Scenes:"):
+                section_indent = indent
+                inline = stripped.partition(":")[2].strip()
+                if inline:
+                    return [] if inline == "[]" else [[inline]]
+            continue
+        if not stripped or stripped.startswith("#"):
+            continue
+        if indent < section_indent or (indent == section_indent and not stripped.startswith("-")):
+            break
+        if stripped.startswith("-"):
+            entries.append([stripped[1:].strip()])
+        elif entries:
+            entries[-1].append(stripped)
+        else:
+            entries.append([stripped]) # Malformed entries must also reach validation.
+    return entries
+
+
 def check_project(root, files=None):
     root = Path(root)
     files = tracked_files(root) if files is None else set(files)
@@ -124,14 +151,36 @@ def check_project(root, files=None):
             if "/PlayMode/" in name and definition.get("includePlatforms", []):
                 errors.append(f"{name}: Play Mode tests must not be Editor-only")
     for mode in ("EditMode", "PlayMode"):
-        if not any(p.startswith(f"Assets/Tests/{mode}/") and p.endswith(".cs") for p in assets):
-            errors.append(f"Assets/Tests/{mode}: no tracked test sources")
+        directory = f"Assets/Tests/{mode}"
+        if not any(p.startswith(directory + "/") and p.endswith(".cs") for p in assets):
+            errors.append(f"{directory}: no tracked test sources")
+        valid_assembly = any(
+            str(Path(name).parent) == directory
+            and isinstance(definition.get("optionalUnityReferences"), list)
+            and "TestAssemblies" in definition["optionalUnityReferences"]
+            and definition.get("includePlatforms", []) == (["Editor"] if mode == "EditMode" else [])
+            for name, definition in assemblies.values()
+        )
+        if not valid_assembly:
+            errors.append(f"{directory}: requires a valid test .asmdef at the mode directory root")
 
     build = text("ProjectSettings/EditorBuildSettings.asset")
-    scenes = re.findall(r"path: (Assets/[^\n]+\.unity)\s*\n\s*guid: ([0-9a-f]{32})", build)
+    scenes = build_scene_entries(build)
     if not scenes:
         errors.append("EditorBuildSettings: no scene entries found")
-    for path, guid in scenes:
+    for index, entry in enumerate(scenes, 1):
+        fields = {}
+        for line in entry:
+            key, separator, value = line.partition(":")
+            if separator:
+                if key in fields:
+                    errors.append(f"EditorBuildSettings: scene {index} has duplicate {key}")
+                fields[key] = value.strip()
+        path, guid = fields.get("path", ""), fields.get("guid", "")
+        if (fields.get("enabled") not in {"0", "1"} or not path.startswith("Assets/")
+                or not path.endswith(".unity") or not GUID.fullmatch(guid)):
+            errors.append(f"EditorBuildSettings: scene {index} has missing or invalid enabled/path/GUID fields")
+            continue
         if path not in assets or asset_guids.get(path) != guid:
             errors.append(f"EditorBuildSettings: scene path/GUID mismatch for {path}")
     return errors
