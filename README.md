@@ -34,13 +34,13 @@ Run the hook regression checks with `python3 -m unittest discover -s tests -p 't
 
 ## Open and run
 
-Open the folder with Unity `6000.6.1f1`. Open `Assets/Scenes/Main.unity` and press Play. The scene contains the `GameBootstrap` and `GameSession` runtime objects; the scene is deliberately empty so each module owner can add their own content without merge conflicts.
+Open the folder with Unity `6000.6.1f1`. Open `Assets/Scenes/FreeSailing.unity` and press Play. This isolated free sailing prototype reuses `GameBootstrap`, `GameSession` and the infinite sea, with a seated crew member, wind, steering and sail trim. There is no course or timer. See `docs/PIXEL_VOYAGE.md` for controls, scope and validation.
 
 ## Module integration
 
 Use `GameSession.Instance` for run lifecycle and subscribe to `StateChanged` when a module needs to react to pause, restart, or game over. Use the interfaces in `Assets/Scripts/Core/Contracts/` for interactions between modules. Do not reach into another module's private fields.
 
-The starter framework does not include gameplay behavior, prefabs, art, or input bindings. Those belong to the module owners listed in `agents.me`.
+The self-contained wind sailing prototype lives in `Assets/Scripts/Sailing/`. It preserves Player/Monsters ownership. Upstream PR #5 adds a separate Rigidbody2D movement and camera entry in Main; FreeSailing does not load that controller alongside its wind controls.
 
 ## Infinite sea
 

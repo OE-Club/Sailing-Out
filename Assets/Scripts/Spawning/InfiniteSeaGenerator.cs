@@ -102,7 +102,7 @@ namespace SailingOut.Spawning
             waterTexture = new Texture2D(textureResolution, textureResolution, TextureFormat.RGBA32, false)
             {
                 name = "ProceduralSeaTile",
-                filterMode = FilterMode.Bilinear,
+                filterMode = FilterMode.Point,
                 wrapMode = TextureWrapMode.Clamp
             };
 
