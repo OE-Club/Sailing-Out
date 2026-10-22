@@ -1,7 +1,7 @@
 {
   "name": "SailingOut.Player",
   "rootNamespace": "SailingOut.Player",
-  "references": ["SailingOut.Core"],
+  "references": ["SailingOut.Core", "Unity.InputSystem"],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
