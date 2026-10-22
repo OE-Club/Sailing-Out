@@ -8,7 +8,8 @@ namespace SailingOut.Sailing
     [DefaultExecutionOrder(100)]
     public sealed class SailingVoyage : MonoBehaviour
     {
-        public SailingDynamics Model { get; } = new();
+        [SerializeField, HideInInspector] SailingDynamics model = new();
+        public SailingDynamics Model => model;
         public GameSession Session { get; private set; }
         Camera view;
         VoyagePixelArt art;
@@ -23,8 +24,36 @@ namespace SailingOut.Sailing
         static readonly Color Cream = new Color32(246, 235, 198, 255);
         static readonly Color Gold = new Color32(255, 191, 76, 255);
 
+        void OnEnable()
+        {
+            // Runtime objects survive an assembly reload; managed graphics and readonly caches do not.
+            // Reuse the existing hierarchy and preserve the model/session instead of starting a new run.
+            vessel = transform.Find("Sloop");
+            if (vessel == null) return; // First entry is initialized by Start.
+            Session = GameSession.Instance;
+            view = Camera.main;
+            art = new VoyagePixelArt();
+            vessel.GetComponent<SpriteRenderer>().sprite = art.Hull;
+            sail = vessel.Find("Trimmed mainsail");
+            sail.GetComponent<SpriteRenderer>().sprite = art.Sail;
+            crew = vessel.Find("Life-vest crew");
+            crewRenderer = crew.GetComponent<SpriteRenderer>();
+            vessel.Find("Crew seat").GetComponent<SpriteRenderer>().sprite = art.Seat;
+            wake = vessel.Find("Wake");
+            wakeRenderer = wake.GetComponent<SpriteRenderer>();
+            wakeRenderer.sprite = art.Wake;
+            for (int i = 0; i < foam.Length; i++)
+            {
+                foam[i] = transform.Find($"Foam {i}");
+                foam[i].GetComponent<SpriteRenderer>().sprite = art.Foam;
+            }
+            titleStyle = bodyStyle = smallStyle = numberStyle = buttonStyle = null;
+            UpdateVisuals();
+        }
+
         void Start()
         {
+            if (vessel != null) return;
             Session = GameSession.Instance;
             view = Camera.main;
             if (Session == null || view == null) { Debug.LogError("Pixel Voyage requires the FreeSailing scene's GameSession and Camera."); enabled = false; return; }
@@ -209,6 +238,11 @@ namespace SailingOut.Sailing
             for (int i = 0; i <= steps; i++)
             { Vector2 p = Vector2.Lerp(a, b, steps == 0 ? 0 : (float)i / steps); Panel(new Rect(p.x - 1.5f, p.y - 1.5f, 3, 3), color); }
         }
-        void OnDestroy() { art?.Dispose(); }
+        void OnDisable()
+        {
+            // OnDisable runs before assemblies unload, while the managed owner still exists.
+            art?.Dispose();
+            art = null;
+        }
     }
 }
