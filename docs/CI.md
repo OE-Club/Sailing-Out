@@ -66,7 +66,12 @@ establish licensing for a separate Linux cloud runner.
 Before adding a Unity job, obtain explicit approval for a license type and
 secure activation method supported by Unity and GameCI. GameCI documents
 license/credential secrets or a licensing server, depending on the license
-type. Do not copy the Mac license, account password or credentials into this
+type. Unity 6.6's official documentation says command-line/manual activation
+does not apply to Unity Personal; Personal activation uses Unity Hub. GameCI's
+Personal-license examples must not be treated as proof that a new Personal
+license can be activated headlessly for this Editor. Resolve that compatibility
+and the intended license entitlement before provisioning any Unity CI secrets.
+Do not copy the Mac license, account password or credentials into this
 repository, upload them as artifacts, or provision persistent access as part of
 this CI change.
 
@@ -87,3 +92,5 @@ has been claimed by this workflow.
 - [GameCI image versions](https://game.ci/docs/docker/versions/)
 - [Exact-version Docker Hub metadata](https://hub.docker.com/v2/repositories/unityci/editor/tags?page_size=100&name=6000.6.1f1)
 - [Unity 6.6 command-line interface](https://docs.unity3d.com/6000.6/Documentation/Manual/CommandLineArguments.html)
+- [Unity 6.6 license management and Personal limitations](https://docs.unity3d.com/6000.6/Documentation/Manual/ManagingYourUnityLicense.html)
+- [Unity 6.6 manual activation eligibility](https://docs.unity3d.com/6000.6/Documentation/Manual/ManualActivationGuide.html)
