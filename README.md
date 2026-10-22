@@ -32,6 +32,10 @@ GitHub also enforces this workflow through the active `Require pull requests for
 
 Run the hook regression checks with `python3 -m unittest discover -s tests -p 'test_git_hooks.py' -v`. They use temporary repositories and local remotes.
 
+GitHub Actions runs metadata/configuration validation and repository regression
+tests on pull requests and `main`. These are repository checks, not Unity
+compilation or Edit/Play tests. See [CI scope and Unity licensing requirements](docs/CI.md).
+
 ## Open and run
 
 Open the folder with Unity `6000.6.1f1`. Open `Assets/Scenes/FreeSailing.unity` and press Play. This isolated free sailing prototype reuses `GameBootstrap`, `GameSession` and the infinite sea, with a seated crew member, wind, steering and sail trim. There is no course or timer. See `docs/PIXEL_VOYAGE.md` for controls, scope and validation.

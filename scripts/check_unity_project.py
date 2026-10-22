@@ -1,0 +1,158 @@
+"""Validate tracked Unity metadata/configuration without launching the Editor.
+
+This does not compile C#, resolve UPM packages, or execute Unity tests.
+"""
+
+import argparse
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+GUID = re.compile(r"^[0-9a-f]{32}$")
+REFERENCE = re.compile(r"\bguid:\s*([0-9a-fA-F]{32})\b")
+SERIALIZED = {".unity", ".prefab", ".asset", ".mat", ".anim", ".controller", ".overrideController"}
+
+
+def tracked_files(root):
+    return set(subprocess.check_output(
+        ["git", "ls-files", "-z"], cwd=root
+    ).decode("utf-8").rstrip("\0").split("\0")) - {""}
+
+
+def check_project(root, files=None):
+    root = Path(root)
+    files = tracked_files(root) if files is None else set(files)
+    errors = []
+    assets = {p for p in files if p.startswith("Assets/")}
+    folders = {str(p) for name in assets for p in Path(name).parents if str(p) != "."}
+    guids = {}
+    asset_guids = {}
+
+    def text(name):
+        path = root / name
+        if path.is_symlink():
+            errors.append(f"{name}: symlinks are not supported by this checker")
+            return ""
+        try:
+            return path.read_text(encoding="utf-8-sig")
+        except (OSError, UnicodeError) as exc:
+            errors.append(f"{name}: {exc}")
+            return ""
+
+    def read_json(name):
+        try:
+            value = json.loads(text(name))
+            if not isinstance(value, dict):
+                raise ValueError("expected a JSON object")
+            return value
+        except ValueError as exc:
+            errors.append(f"{name}: {exc}")
+            return {}
+
+    for name in sorted(assets | (folders - {"Assets"})):
+        if not name.endswith(".meta") and name + ".meta" not in assets:
+            errors.append(f"{name}: missing tracked .meta")
+    for name in sorted(n for n in assets if n.endswith(".meta")):
+        target = name[:-5]
+        if target not in assets and target not in folders:
+            errors.append(f"{name}: orphan .meta")
+        data = text(name)
+        matches = re.findall(r"^guid:\s*(\S+)\s*$", data, re.MULTILINE)
+        if len(matches) != 1 or not GUID.fullmatch(matches[0]):
+            errors.append(f"{name}: expected exactly one lowercase 32-character GUID")
+            continue
+        guid = matches[0]
+        if guid in guids:
+            errors.append(f"{name}: duplicate GUID also used by {guids[guid]}")
+        guids[guid] = name
+        asset_guids[target] = guid
+        folder_flag = bool(re.search(r"^folderAsset: yes\s*$", data, re.MULTILINE))
+        if folder_flag != (target in folders):
+            errors.append(f"{name}: folderAsset flag disagrees with tracked asset type")
+
+    for name in sorted(n for n in files if Path(n).suffix in SERIALIZED):
+        for guid in REFERENCE.findall(text(name)):
+            # Unity's null and built-in resource GUIDs do not refer to project .meta files.
+            builtin = guid == "0" * 32 or re.fullmatch(r"0{16}[ef]0{15}", guid)
+            if not builtin and guid not in guids:
+                errors.append(f"{name}: unresolved GUID {guid}")
+
+    version = text("ProjectSettings/ProjectVersion.txt")
+    editor = re.search(r"^m_EditorVersion: (\d+\.\d+\.\d+[abfp]\d+)\s*$", version, re.MULTILINE)
+    revision = re.search(r"^m_EditorVersionWithRevision: (\S+) \(([0-9a-f]{12})\)\s*$", version, re.MULTILINE)
+    if not editor or not revision or editor[1] != revision[1]:
+        errors.append("ProjectSettings/ProjectVersion.txt: editor version/revision must be pinned and agree")
+
+    manifest = read_json("Packages/manifest.json").get("dependencies", {})
+    locked = read_json("Packages/packages-lock.json").get("dependencies", {})
+    if not isinstance(manifest, dict) or not isinstance(locked, dict):
+        errors.append("Packages: dependencies must be JSON objects")
+        manifest, locked = {}, {}
+    for name, version in sorted(manifest.items()):
+        entry = locked.get(name, {})
+        if not isinstance(entry, dict) or entry.get("version") != version or entry.get("depth") != 0:
+            errors.append(f"Packages: {name} manifest version must match its direct lock entry")
+    if "com.unity.test-framework" not in manifest:
+        errors.append("Packages: Unity Test Framework must be declared")
+
+    assemblies = {}
+    for name in sorted(n for n in assets if n.endswith(".asmdef")):
+        definition = read_json(name)
+        assembly = definition.get("name")
+        if not isinstance(assembly, str) or not assembly or assembly in assemblies:
+            errors.append(f"{name}: assembly name must be nonempty and unique")
+        else:
+            assemblies[assembly] = (name, definition)
+    for name, definition in assemblies.values():
+        refs = definition.get("references", [])
+        if not isinstance(refs, list) or not all(isinstance(ref, str) for ref in refs):
+            errors.append(f"{name}: assembly references must be a list of strings")
+            continue
+        for ref in refs:
+            if ref.startswith("SailingOut.") and ref not in assemblies:
+                errors.append(f"{name}: unresolved project assembly {ref}")
+            if ref == "Unity.InputSystem" and "com.unity.inputsystem" not in manifest:
+                errors.append(f"{name}: Unity.InputSystem requires its package")
+        if name.startswith("Assets/Tests/"):
+            if "TestAssemblies" not in definition.get("optionalUnityReferences", []):
+                errors.append(f"{name}: test assembly must opt into TestAssemblies")
+            if "/EditMode/" in name and definition.get("includePlatforms") != ["Editor"]:
+                errors.append(f"{name}: Edit Mode tests must be Editor-only")
+            if "/PlayMode/" in name and definition.get("includePlatforms", []):
+                errors.append(f"{name}: Play Mode tests must not be Editor-only")
+    for mode in ("EditMode", "PlayMode"):
+        if not any(p.startswith(f"Assets/Tests/{mode}/") and p.endswith(".cs") for p in assets):
+            errors.append(f"Assets/Tests/{mode}: no tracked test sources")
+
+    build = text("ProjectSettings/EditorBuildSettings.asset")
+    scenes = re.findall(r"path: (Assets/[^\n]+\.unity)\s*\n\s*guid: ([0-9a-f]{32})", build)
+    if not scenes:
+        errors.append("EditorBuildSettings: no scene entries found")
+    for path, guid in scenes:
+        if path not in assets or asset_guids.get(path) != guid:
+            errors.append(f"EditorBuildSettings: scene path/GUID mismatch for {path}")
+    return errors
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    args = parser.parse_args()
+    try:
+        errors = check_project(args.root)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        print(f"Repository check could not run: {exc}", file=sys.stderr)
+        return 1
+    for error in errors:
+        print(f"ERROR: {error}", file=sys.stderr)
+    if errors:
+        return 1
+    print("Tracked Unity metadata/configuration checks passed (Unity compilation/tests were not run).")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
