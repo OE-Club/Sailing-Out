@@ -1,0 +1,17 @@
+{
+  "name": "com.sailingout.art-generation",
+  "version": "0.1.0",
+  "displayName": "Sailing Out Art and World Generation",
+  "description": "Pixel-art setup helpers and deterministic endless-world spawning for the Sailing Out prototype.",
+  "unity": "6000.0",
+  "dependencies": {
+    "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.physics2d": "1.0.0",
+    "com.unity.modules.imageconversion": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0",
+    "com.unity.modules.imgui": "1.0.0"
+  },
+  "author": {
+    "name": "Sailing Out"
+  }
+}

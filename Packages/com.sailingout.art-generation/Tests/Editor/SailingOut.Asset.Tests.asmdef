@@ -1,0 +1,8 @@
+{
+  "name": "SailingOut.Asset.Tests",
+  "references": ["SailingOut.Runtime", "SailingOut.Editor"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false,
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"]
+}

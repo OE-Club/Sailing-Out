@@ -70,6 +70,14 @@ class UnityProjectChecksTests(unittest.TestCase):
         self.assertTrue(any("unresolved GUID" in e for e in errors))
         self.assertTrue(any("scene path/GUID mismatch" in e for e in errors))
 
+    def test_embedded_package_guid_resolves_asset_reference(self):
+        package_script = "Packages/com.example.runtime/Runtime/Example.cs"
+        package_guid = "f" * 32
+        self.write(package_script, "// Embedded package fixture")
+        self.meta(package_script, package_guid)
+        self.write("Assets/Scenes/Test.unity", "m_Script: {fileID: 11500000, guid: " + package_guid + ", type: 3}")
+        self.assertEqual(self.errors(), [])
+
     def test_stale_lock_and_invalid_json(self):
         self.write("Packages/packages-lock.json", '{"dependencies": {}}')
         self.assertTrue(any("direct lock entry" in e for e in self.errors()))
