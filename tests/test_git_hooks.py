@@ -45,8 +45,8 @@ class GitHooksTests(unittest.TestCase):
         self.hooks_path = Path(self.git("config", "--local", "--get", "core.hooksPath").stdout.strip())
 
         # Only Git LFS's transport is stubbed; Git and all installed hooks run normally.
-        self.lfs_args = self.root / "lfs-args"
-        self.lfs_input = self.root / "lfs-input"
+        self.lfs_args = self.repo / "lfs-args"
+        self.lfs_input = self.repo / "lfs-input"
         fake_bin = self.root / "bin"
         fake_bin.mkdir()
         lfs = fake_bin / "git-lfs"
@@ -57,8 +57,8 @@ class GitHooksTests(unittest.TestCase):
         lfs.chmod(0o755)
         self.env.update(
             PATH=str(fake_bin) + os.pathsep + self.env["PATH"],
-            SAILING_OUT_TEST_LFS_ARGS=str(self.lfs_args),
-            SAILING_OUT_TEST_LFS_INPUT=str(self.lfs_input),
+            SAILING_OUT_TEST_LFS_ARGS=self.lfs_args.name,
+            SAILING_OUT_TEST_LFS_INPUT=self.lfs_input.name,
         )
 
     def run_command(self, *args, cwd=None, check=True, input=None):
@@ -95,7 +95,7 @@ class GitHooksTests(unittest.TestCase):
                 self.assertTrue(os.access(installed, os.X_OK))
                 self.run_command("sh", "-n", str(installed))
         self.run_command("sh", "scripts/install-git-hooks.sh")
-        self.assertEqual(self.git("config", "--get", "core.hooksPath").stdout.strip(), str(self.hooks_path))
+        self.assertEqual(self.git("config", "--get", "core.hooksPath").stdout.strip(), self.hooks_path.as_posix())
 
     def test_commit_on_main_is_blocked(self):
         (self.repo / "blocked.txt").write_text("should not commit\n")
@@ -165,10 +165,22 @@ class GitHooksTests(unittest.TestCase):
         self.assertEqual(
             self.git("--git-dir=" + str(remote), "rev-parse", "codex/allowed").stdout.strip(), self.feature
         )
+
+        if os.name == "nt":
+            self.skipTest("Windows cannot run the POSIX Git LFS transport stub; Linux CI covers forwarding")
+
+        update = f"HEAD {self.feature} refs/heads/codex/allowed {'0' * 40}\n"
+        resolved_lfs = self.run_command("sh", "-c", "command -v git-lfs")
+        self.assertTrue(
+            resolved_lfs.stdout.strip().replace("\\", "/").endswith("/bin/git-lfs"),
+            resolved_lfs.stdout + resolved_lfs.stderr,
+        )
+        self.run_command(
+            "sh", str(self.hooks_path / "pre-push"), "origin", str(remote), input=update
+        )
         self.assertEqual(self.lfs_args.read_text().splitlines(), ["pre-push", "origin", str(remote)])
         fields = self.lfs_input.read_text().split()
-        self.assertEqual(fields[:3], ["HEAD", self.feature, "refs/heads/codex/allowed"])
-        self.assertEqual(set(fields[3]), {"0"})
+        self.assertEqual(fields, update.split())
 
     def test_branch_controlled_hook_changes_are_not_executed(self):
         self.add_remote()
@@ -189,7 +201,7 @@ class GitHooksTests(unittest.TestCase):
         linked = self.root / "linked checkout"
         self.git("worktree", "add", "--quiet", "-b", "codex/linked", str(linked), "codex/task")
         self.assertEqual(
-            self.git("config", "--get", "core.hooksPath", cwd=linked).stdout.strip(), str(self.hooks_path)
+            self.git("config", "--get", "core.hooksPath", cwd=linked).stdout.strip(), self.hooks_path.as_posix()
         )
         marker = self.root / "linked-hook-ran"
         (linked / ".githooks/pre-commit").write_text(

@@ -54,7 +54,7 @@ def check_project(root, files=None):
     files = tracked_files(root) if files is None else set(files)
     errors = []
     assets = {p for p in files if p.startswith("Assets/")}
-    folders = {str(p) for name in assets for p in Path(name).parents if str(p) != "."}
+    folders = {p.as_posix() for name in assets for p in Path(name).parents if p.as_posix() != "."}
     guids = {}
     asset_guids = {}
 
@@ -99,6 +99,18 @@ def check_project(root, files=None):
         folder_flag = bool(re.search(r"^folderAsset: yes\s*$", data, re.MULTILINE))
         if folder_flag != (target in folders):
             errors.append(f"{name}: folderAsset flag disagrees with tracked asset type")
+
+    # Embedded package scripts and assets can be referenced by scenes under Assets.
+    for name in sorted(n for n in files if n.startswith("Packages/") and n.endswith(".meta")):
+        data = text(name)
+        matches = re.findall(r"^guid:\s*(\S+)\s*$", data, re.MULTILINE)
+        if len(matches) != 1 or not GUID.fullmatch(matches[0]):
+            errors.append(f"{name}: expected exactly one lowercase 32-character GUID")
+            continue
+        guid = matches[0]
+        if guid in guids:
+            errors.append(f"{name}: duplicate GUID also used by {guids[guid]}")
+        guids[guid] = name
 
     for name in sorted(n for n in files if Path(n).suffix in SERIALIZED):
         for guid in REFERENCE.findall(text(name)):
@@ -155,7 +167,7 @@ def check_project(root, files=None):
         if not any(p.startswith(directory + "/") and p.endswith(".cs") for p in assets):
             errors.append(f"{directory}: no tracked test sources")
         valid_assembly = any(
-            str(Path(name).parent) == directory
+            Path(name).parent.as_posix() == directory
             and isinstance(definition.get("optionalUnityReferences"), list)
             and "TestAssemblies" in definition["optionalUnityReferences"]
             and definition.get("includePlatforms", []) == (["Editor"] if mode == "EditMode" else [])

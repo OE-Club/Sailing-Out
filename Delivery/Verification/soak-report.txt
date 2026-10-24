@@ -1,0 +1,13 @@
+Unity: 6000.6.7f1
+GPU: AMD Radeon(TM) 860M Graphics
+Resolution: 1920x1080
+Elapsed seconds: 605.02
+Distance: 3025.75
+Measured frames (after 10s): 35567
+Mean FPS: 59.79
+Median FPS: 60.00
+99th percentile frame ms: 17.01
+Peak active: 61
+Peak managed: 111
+Allocated at 180s: 88
+Final allocated: 111
