@@ -12,6 +12,7 @@ namespace SailingOut
         private bool diagnostics;
         private GUIStyle title;
         private GUIStyle label;
+        private GUIStyle boostIcon;
 
         private void Start()
         {
@@ -46,9 +47,20 @@ namespace SailingOut
                 normal = { textColor = new Color(0.88f, 0.96f, 0.91f) } };
             label ??= new GUIStyle(GUI.skin.label) { fontSize = 13,
                 normal = { textColor = new Color(0.67f, 0.86f, 0.86f) } };
+            boostIcon ??= new GUIStyle(GUI.skin.label) { fontSize = 32, fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter, normal = { textColor = new Color(0.25f, 0.95f, 0.48f) } };
             Matrix4x4 old = GUI.matrix;
             GUI.matrix = Matrix4x4.Scale(Vector3.one * (Screen.height / 540f));
             float width = Screen.width * 540f / Screen.height;
+            GUI.color = new Color(0.025f, 0.08f, 0.12f, 0.92f);
+            GUI.DrawTexture(new Rect(width - 156, 14, 140, 52), Texture2D.whiteTexture);
+            for (int i = 0; i < 3; i++)
+            {
+                GUI.color = i < boat.BoostsRemaining
+                    ? new Color(0.25f, 0.95f, 0.48f, 1f)
+                    : new Color(0.38f, 0.48f, 0.46f, 0.72f);
+                GUI.Label(new Rect(width - 151 + i * 43, 14, 42, 50), "\u26A1", boostIcon);
+            }
             GUI.color = new Color(0.025f, 0.08f, 0.12f, 0.92f);
             GUI.DrawTexture(new Rect(16, 14, 240, diagnostics ? 140 : 88), Texture2D.whiteTexture);
             GUI.color = Color.white;
@@ -67,7 +79,7 @@ namespace SailingOut
             GUI.DrawTexture(new Rect(16, 496, width - 32, 30), Texture2D.whiteTexture);
             GUI.color = Color.white;
             GUI.Label(new Rect(30, 500, width - 50, 24),
-                $"A/D  steer     SPACE  guide: {(boat.Guided ? "ON" : "OFF")}     R  restart     N  new sea     F1  details", label);
+                $"A/D  steer     SPACE  guide: {(boat.Guided ? "ON" : "OFF")}     W  boost     R  restart     N  new sea     F1  details", label);
             GUI.matrix = old;
         }
     }
