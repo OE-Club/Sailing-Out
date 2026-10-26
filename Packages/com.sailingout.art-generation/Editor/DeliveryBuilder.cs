@@ -13,7 +13,10 @@ namespace SailingOut.Editor
 
         public static void BuildWindowsDemo()
         {
-            Directory.CreateDirectory("Builds/SailingOutDemo");
+            string destination = Environment.GetEnvironmentVariable("SAILINGOUT_BUILD_PATH");
+            if (string.IsNullOrEmpty(destination))
+                destination = "Builds/SailingOutDemo/SailingOutDemo.exe";
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(destination)));
             var target = UnityEditor.Build.NamedBuildTarget.Standalone;
             ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(target);
             try
@@ -22,7 +25,7 @@ namespace SailingOut.Editor
                 BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
                     scenes = new[] { Scene },
-                    locationPathName = "Builds/SailingOutDemo/SailingOutDemo.exe",
+                    locationPathName = destination,
                     target = BuildTarget.StandaloneWindows64,
                     options = BuildOptions.Development
                 });
