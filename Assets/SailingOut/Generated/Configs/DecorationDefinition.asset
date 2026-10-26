@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131a94b56362e1149b3583fff82bffad, type: 3}
+  m_Name: DecorationDefinition
+  m_EditorClassIdentifier: SailingOut.Runtime::SailingOut.SpawnableDefinition
+  category: 4
+  prefab: {fileID: 8701085554501707932, guid: ec7d1605f7d54eb40a211a04a2e0e942, type: 3}
+  variants:
+  - {fileID: 8701085554501707932, guid: ec7d1605f7d54eb40a211a04a2e0e942, type: 3}
+  - {fileID: 7997198616335935039, guid: 4ca77cd1d5daabf4f9423de248cad37a, type: 3}
+  - {fileID: 1530669091039309953, guid: 72e2763de7fe6704691e4af048df445d, type: 3}
+  weight: 1
+  minimumDistance: 0.25
+  clearanceRadius: 1.4177446
+  collisionBoundaryPadding: 0.125
+  colliderKind: 0
+  blocksPath: 0
+  collectible: 0

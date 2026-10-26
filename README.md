@@ -1,6 +1,6 @@
 # Sailing Out
 
-Unity 6.1 2D prototype. The project is intentionally small and split into three gameplay modules:
+Unity 6.6 2D prototype targeting Unity `6000.6.1f1`. The sailing art and generation module has been validated locally with Unity `6000.6.7f1`; it has not yet been tested with the exact pinned patch. The project is intentionally small and split into three gameplay modules:
 
 - `Assets/Scripts/Spawning/` - random object generation
 - `Assets/Scripts/Player/` - player input and movement
@@ -38,13 +38,17 @@ compilation or Edit/Play tests. See [CI scope and Unity licensing requirements](
 
 ## Open and run
 
-Open the folder with Unity `6000.6.1f1`. Open `Assets/Scenes/FreeSailing.unity` and press Play. This isolated free sailing prototype reuses `GameBootstrap`, `GameSession` and the infinite sea, with a seated crew member, wind, steering and sail trim. There is no course or timer. See `docs/PIXEL_VOYAGE.md` for controls, scope and validation.
+Open the project with Unity `6000.6.1f1`. `Assets/Scenes/FreeSailing.unity` is the isolated wind-sailing prototype; `Assets/Scenes/Main.unity` is the team integration scene. For the complete art and spawning demonstration, open `Assets/SailingOut/Generated/Demo/SailingOutGenerationDemo.unity` and press Play. See `docs/PIXEL_VOYAGE.md` for the sailing prototype controls and scope.
 
 ## Module integration
 
 Use `GameSession.Instance` for run lifecycle and subscribe to `StateChanged` when a module needs to react to pause, restart, or game over. Use the interfaces in `Assets/Scripts/Core/Contracts/` for interactions between modules. Do not reach into another module's private fields.
 
 The self-contained wind sailing prototype lives in `Assets/Scripts/Sailing/`. It preserves Player/Monsters ownership. Upstream PR #5 adds a separate Rigidbody2D movement and camera entry in Main; FreeSailing does not load that controller alongside its wind controls.
+
+## Art and decoration generation
+
+The embedded package `Packages/com.sailingout.art-generation/` owns the pixel-art import workflow and deterministic endless decoration/interactable generation. Original PNG art, sprite sheets, 15 Prefabs, animation clips, configs and a runnable demo are included in `Assets/SailingOut/`. Use **Sailing Out > Rebuild Included Demo** after editing art. `SpawnManager` reads the player `Collider2D` and does not take over player movement or interaction effects. See `Assets/SailingOut/Documentation/接入与制作指南.md` for the delivery package, seed reproduction and integration workflow.
 
 ## Infinite sea
 
