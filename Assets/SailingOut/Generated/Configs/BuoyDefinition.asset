@@ -22,6 +22,6 @@ MonoBehaviour:
   minimumDistance: 0.25
   clearanceRadius: 1.4177446
   collisionBoundaryPadding: 0.125
-  colliderKind: 0
+  colliderKind: 2
   blocksPath: 0
   collectible: 0

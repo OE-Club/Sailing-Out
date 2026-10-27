@@ -26,6 +26,9 @@ namespace SailingOut.Tests
                 Collider2D collider = prefab.GetComponent<Collider2D>();
                 if (identity.Definition.Category == SpawnCategory.Reef)
                     Assert.IsTrue(collider != null && !collider.isTrigger && identity.Definition.BlocksPath);
+                else if (identity.Definition.Category == SpawnCategory.Buoy)
+                    Assert.IsTrue(collider != null && collider.isTrigger &&
+                        !identity.Definition.BlocksPath && !identity.Definition.Collectible);
                 else if (identity.Definition.Category == SpawnCategory.Supply)
                     Assert.IsTrue(collider != null && collider.isTrigger && identity.Definition.Collectible);
                 else Assert.IsNull(collider);

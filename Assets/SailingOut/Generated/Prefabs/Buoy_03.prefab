@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4295614912241357923}
   - component: {fileID: 8300465395888526985}
+  - component: {fileID: 8911058208699946930}
   - component: {fileID: 1381968010306143711}
   - component: {fileID: 2549416678720171469}
-  - component: {fileID: 2356040330992504938}
+  - component: {fileID: 5155039066360769609}
   m_Layer: 2
   m_Name: Buoy_03
   m_TagString: Untagged
@@ -95,6 +96,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!58 &8911058208699946930
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8087728695709205599}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.8
 --- !u!95 &1381968010306143711
 Animator:
   serializedVersion: 7
@@ -129,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c21fc2c5af465d543b10a20beebd3861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SailingOut.Runtime::SailingOut.PooledAnimatorReset
---- !u!114 &2356040330992504938
+--- !u!114 &5155039066360769609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

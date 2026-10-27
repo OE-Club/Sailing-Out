@@ -376,13 +376,14 @@ namespace SailingOut.Editor
 
         private static void AddCollider(GameObject root, SpawnCategory category, Sprite sprite)
         {
-            if (category != SpawnCategory.Reef && category != SpawnCategory.Supply)
+            if (category != SpawnCategory.Reef && category != SpawnCategory.Supply &&
+                category != SpawnCategory.Buoy)
                 return;
 
             CircleCollider2D collider = root.AddComponent<CircleCollider2D>();
             Vector2 size = sprite.bounds.size;
             collider.radius = Mathf.Max(0.1f, Mathf.Min(size.x, size.y) * 0.4f);
-            collider.isTrigger = category == SpawnCategory.Supply;
+            collider.isTrigger = category == SpawnCategory.Supply || category == SpawnCategory.Buoy;
         }
 
         private static AnimationClip CreateAnimationClip(IReadOnlyList<Sprite> frames, string path, float fps)
@@ -587,7 +588,9 @@ namespace SailingOut.Editor
         {
             if (category == SpawnCategory.Reef)
                 return SpawnColliderKind.Solid;
-            return category == SpawnCategory.Supply ? SpawnColliderKind.Trigger : SpawnColliderKind.None;
+            return category == SpawnCategory.Supply || category == SpawnCategory.Buoy
+                ? SpawnColliderKind.Trigger
+                : SpawnColliderKind.None;
         }
 
         private readonly struct VariantFrames

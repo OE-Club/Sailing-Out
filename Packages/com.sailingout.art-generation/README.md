@@ -6,6 +6,7 @@ This embedded Unity package supplies the runtime portion of the art/decoration m
 - continuous positions with minimum separation checks;
 - a safe lane at least as wide as the player collider;
 - reef, supply, buoy, and seabird category rules;
+- trigger-based buoy contact that slows the demo boat to half speed for 0.5 seconds;
 - non-blocking floating-decoration variants and tiled water/foam background;
 - pooled reuse and lifecycle callbacks;
 - distance-based generation stages;
