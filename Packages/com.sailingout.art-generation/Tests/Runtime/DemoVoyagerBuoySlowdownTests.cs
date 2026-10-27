@@ -36,6 +36,8 @@ namespace SailingOut.Tests
                 yield return new WaitForFixedUpdate();
 
             Assert.Greater(ReadSlowdownRemaining(), 0f, "The buoy trigger should start the slowdown.");
+            Assert.That(boat.Health, Is.EqualTo(2.5f).Within(0.001f));
+            Assert.That(boat.BuoyPushDirection, Is.EqualTo(-1).Or.EqualTo(1));
 
             float slowStartY = boatObject.transform.position.y;
             yield return new WaitForSeconds(0.16f);
@@ -51,6 +53,19 @@ namespace SailingOut.Tests
             yield return new WaitForSeconds(0.12f);
             float recoveredDistance = boatObject.transform.position.y - recoveryStartY;
             Assert.That(recoveredDistance, Is.InRange(0.45f, 0.75f));
+        }
+
+        [UnityTest]
+        public IEnumerator ReefContactRemovesHalfAHeart()
+        {
+            CreateBoat();
+            CreateReef(1.5f);
+
+            float timeout = Time.time + 1f;
+            while (boat.Health >= DemoVoyager.MaximumHealth && Time.time < timeout)
+                yield return new WaitForFixedUpdate();
+
+            Assert.That(boat.Health, Is.EqualTo(2.5f).Within(0.001f));
         }
 
         private void CreateBoat()
@@ -75,6 +90,18 @@ namespace SailingOut.Tests
             buoyObject = new GameObject("TestBuoy", typeof(CircleCollider2D), typeof(SpawnableIdentity));
             CircleCollider2D collider = buoyObject.GetComponent<CircleCollider2D>();
             collider.isTrigger = true;
+            collider.radius = 0.4f;
+            buoyObject.transform.position = new Vector3(0f, y, 0f);
+            Set(buoyObject.GetComponent<SpawnableIdentity>(), "definition", buoyDefinition);
+        }
+
+        private void CreateReef(float y)
+        {
+            buoyDefinition = ScriptableObject.CreateInstance<SpawnableDefinition>();
+            Set(buoyDefinition, "category", SpawnCategory.Reef);
+
+            buoyObject = new GameObject("TestReef", typeof(CircleCollider2D), typeof(SpawnableIdentity));
+            CircleCollider2D collider = buoyObject.GetComponent<CircleCollider2D>();
             collider.radius = 0.4f;
             buoyObject.transform.position = new Vector3(0f, y, 0f);
             Set(buoyObject.GetComponent<SpawnableIdentity>(), "definition", buoyDefinition);

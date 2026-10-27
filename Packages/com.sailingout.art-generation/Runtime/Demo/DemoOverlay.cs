@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SailingOut
 {
-    /// <summary>Demo-only controls and seed diagnostics. Has no reward/damage/collection logic.</summary>
+    /// <summary>Demo-only controls, health display, and seed diagnostics.</summary>
     [RequireComponent(typeof(SpawnManager))]
     public sealed class DemoOverlay : MonoBehaviour
     {
@@ -13,6 +13,8 @@ namespace SailingOut
         private bool diagnostics;
         private GUIStyle title;
         private GUIStyle label;
+        private GUIStyle fullHeart;
+        private GUIStyle emptyHeart;
 
         private void Start()
         {
@@ -53,17 +55,18 @@ namespace SailingOut
             GUI.matrix = Matrix4x4.Scale(Vector3.one * (Screen.height / 540f));
             float width = Screen.width * 540f / Screen.height;
             GUI.color = new Color(0.025f, 0.08f, 0.12f, 0.92f);
-            GUI.DrawTexture(new Rect(16, 14, 240, diagnostics ? 140 : 88), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(16, 14, 240, diagnostics ? 150 : 116), Texture2D.whiteTexture);
             GUI.color = Color.white;
             GUI.Label(new Rect(30, 20, 240, 38), "SAILING OUT", title);
             float distance = boat.DistanceTravelled;
             string sea = distance < 120f ? "OPEN WATER" : distance < 300f ? "REEF WATCH" :
                 distance < 600f ? "CROSSCURRENT" : "ROCKY PASSAGE";
             GUI.Label(new Rect(32, 58, 215, 24), $"{sea}   /   {distance:0000} m", label);
+            DrawHearts();
             if (diagnostics)
             {
-                GUI.Label(new Rect(32, 86, 230, 24), $"Seed {manager.CurrentSeed}", label);
-                GUI.Label(new Rect(32, 108, 230, 24),
+                GUI.Label(new Rect(32, 112, 230, 24), $"Seed {manager.CurrentSeed}", label);
+                GUI.Label(new Rect(32, 134, 230, 24),
                     $"Active {manager.ActiveObjectCount}   Pool {manager.PooledObjectCount}", label);
             }
             GUI.color = new Color(0.025f, 0.08f, 0.12f, 0.9f);
@@ -72,6 +75,38 @@ namespace SailingOut
             GUI.Label(new Rect(30, 500, width - 50, 24),
                 $"A/D  steer     SPACE  guide: {(boat.Guided ? "ON" : "OFF")}     R  restart     N  new sea     F1  details", label);
             GUI.matrix = old;
+        }
+
+        private void DrawHearts()
+        {
+            fullHeart ??= new GUIStyle(label)
+            {
+                fontSize = 23,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.95f, 0.25f, 0.3f) }
+            };
+            emptyHeart ??= new GUIStyle(fullHeart)
+            {
+                normal = { textColor = new Color(0.32f, 0.22f, 0.25f) }
+            };
+
+            for (int i = 0; i < 3; i++)
+            {
+                Rect slot = new Rect(32f + i * 32f, 80f, 30f, 30f);
+                GUI.Label(slot, "♡", emptyHeart);
+                float fill = Mathf.Clamp01(boat.Health - i);
+                if (fill <= 0f)
+                    continue;
+                if (fill >= 1f)
+                {
+                    GUI.Label(slot, "♥", fullHeart);
+                    continue;
+                }
+
+                GUI.BeginGroup(new Rect(slot.x, slot.y, slot.width * fill, slot.height));
+                GUI.Label(new Rect(0f, 0f, slot.width, slot.height), "♥", fullHeart);
+                GUI.EndGroup();
+            }
         }
     }
 }
