@@ -45,7 +45,7 @@ namespace SailingOut
             foreach (float dt in frameTimes) sum += dt;
             string report = $"Unity: {Application.unityVersion}\nGPU: {SystemInfo.graphicsDeviceName}\n" +
                 $"Resolution: {Screen.width}x{Screen.height}\nElapsed seconds: {Time.realtimeSinceStartup-started:F2}\n" +
-                $"Distance: {boat.transform.position.y:F2}\nMeasured frames (after 10s): {frameTimes.Count}\n" +
+                $"Distance: {boat.DistanceTravelled:F2}\nMeasured frames (after 10s): {frameTimes.Count}\n" +
                 $"Mean FPS: {frameTimes.Count/sum:F2}\nMedian FPS: {1f/frameTimes[frameTimes.Count/2]:F2}\n" +
                 $"99th percentile frame ms: {frameTimes[(int)(frameTimes.Count*0.99f)]*1000f:F2}\n" +
                 $"Peak active: {peakActive}\nPeak managed: {peakManaged}\n" +

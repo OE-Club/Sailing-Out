@@ -8,6 +8,7 @@ namespace SailingOut
     {
         private SpawnManager manager;
         private DemoVoyager boat;
+        private DemoCameraFollow cameraFollow;
         private Camera worldCamera;
         private bool diagnostics;
         private GUIStyle title;
@@ -18,6 +19,7 @@ namespace SailingOut
             manager = GetComponent<SpawnManager>();
             boat = FindAnyObjectByType<DemoVoyager>();
             worldCamera = Camera.main;
+            cameraFollow = worldCamera != null ? worldCamera.GetComponent<DemoCameraFollow>() : null;
             Application.targetFrameRate = 60;
         }
 
@@ -31,7 +33,8 @@ namespace SailingOut
             {
                 int seed = manager.CurrentSeed + (input.keyCode == KeyCode.N ? 1 : 0);
                 boat.ResetVoyage();
-                worldCamera.transform.position = new Vector3(0f, 3f, -10f);
+                if (cameraFollow != null)
+                    cameraFollow.SnapToTarget();
                 manager.Initialize(seed);
             }
         }
@@ -53,7 +56,7 @@ namespace SailingOut
             GUI.DrawTexture(new Rect(16, 14, 240, diagnostics ? 140 : 88), Texture2D.whiteTexture);
             GUI.color = Color.white;
             GUI.Label(new Rect(30, 20, 240, 38), "SAILING OUT", title);
-            float distance = Mathf.Max(0f, boat.transform.position.y);
+            float distance = boat.DistanceTravelled;
             string sea = distance < 120f ? "OPEN WATER" : distance < 300f ? "REEF WATCH" :
                 distance < 600f ? "CROSSCURRENT" : "ROCKY PASSAGE";
             GUI.Label(new Rect(32, 58, 215, 24), $"{sea}   /   {distance:0000} m", label);

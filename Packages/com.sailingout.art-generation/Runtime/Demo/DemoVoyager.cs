@@ -11,6 +11,8 @@ namespace SailingOut
         [SerializeField, Min(0f)] private float horizontalLimit = 7f;
 
         private Rigidbody2D body;
+        private SpriteRenderer boatSprite;
+        private Vector2 voyageStart;
         private float horizontalInput;
         private SpawnManager manager;
         private bool guided = true;
@@ -18,18 +20,25 @@ namespace SailingOut
         private bool rightHeld;
 
         public bool Guided => guided;
+        public float DistanceTravelled => Mathf.Max(0f,
+            (body.position.y - voyageStart.y) * (manager != null ? manager.TravelDirectionSign : 1f));
 
         public void ResetVoyage()
         {
-            body.position = Vector2.zero;
+            body.position = voyageStart;
             body.linearVelocity = Vector2.zero;
             body.angularVelocity = 0f;
+            Physics2D.SyncTransforms();
         }
 
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+            voyageStart = body.position;
             manager = FindAnyObjectByType<SpawnManager>();
+            boatSprite = GetComponent<SpriteRenderer>();
+            if (boatSprite != null && manager != null)
+                boatSprite.flipY = manager.TravelDirectionSign < 0f;
         }
 
         private void OnGUI()
@@ -63,7 +72,8 @@ namespace SailingOut
             Vector2 position = body.position;
             position.x = Mathf.Clamp(position.x + horizontalInput * horizontalSpeed * Time.fixedDeltaTime,
                 -horizontalLimit, horizontalLimit);
-            position.y += forwardSpeed * Time.fixedDeltaTime;
+            float direction = manager != null ? manager.TravelDirectionSign : 1f;
+            position.y += direction * forwardSpeed * Time.fixedDeltaTime;
             if (guided && manager != null)
                 position.x = Mathf.MoveTowards(position.x, manager.GetSafeLaneCenter(position.y),
                     horizontalSpeed * Time.fixedDeltaTime);

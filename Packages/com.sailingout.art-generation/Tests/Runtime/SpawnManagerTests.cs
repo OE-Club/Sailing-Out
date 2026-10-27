@@ -54,6 +54,31 @@ namespace SailingOut.Tests
         }
 
         [UnityTest]
+        public IEnumerator DownwardTravelGeneratesAheadAndRecyclesBehind()
+        {
+            SpawnManager manager = CreateManager(4102, out GameObject root);
+            GenerationProfile profile = GetProfile(manager);
+            Set(profile, "travelDownward", true);
+
+            manager.Initialize(4102);
+            float playerY = -40f;
+            manager.RecycleBehind(playerY);
+            manager.EnsureAhead(playerY, 0f);
+
+            Assert.Less(manager.GeneratedThroughY, playerY - 25f,
+                "The generated boundary should stay ahead in the downward travel direction.");
+            Assert.That(ActivePositions(root.transform).Exists(position => position.y < playerY), Is.True,
+                "The manager should place active objects in front of the descending player.");
+
+            manager.RecycleBehind(playerY);
+            foreach (Vector2 position in ActivePositions(root.transform))
+                Assert.That(position.y, Is.LessThanOrEqualTo(playerY + 15f + 0.0001f),
+                    "Objects farther behind than the recycle distance should be returned to the pool.");
+
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator ActiveObjectsStayWithinConfiguredLimitAcrossLongJumps()
         {
             SpawnManager manager = CreateManager(64, out _);
