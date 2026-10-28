@@ -47,6 +47,7 @@ namespace SailingOut
                 Finish("Missing demo components");
                 yield break;
             }
+            overlay.BeginGame();
             started = lastMovement = Time.realtimeSinceStartup;
             lastDistance = boat.DistanceTravelled;
             ready = true;

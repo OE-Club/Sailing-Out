@@ -222,6 +222,39 @@ namespace SailingOut.Tests
             yield return new ExitPlayMode();
         }
 
+        [UnityTest]
+        public IEnumerator AcceptanceCaptureStartsTheDeliveredMenuBeforeMeasuringTravel()
+        {
+            EditorSceneManager.OpenScene(Root + "Generated/Demo/SailingOutGenerationDemo.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var boat = Object.FindAnyObjectByType<DemoVoyager>();
+            float deadline = Time.realtimeSinceStartup + 2f;
+            while (boat.IsRunning && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.IsFalse(boat.IsRunning, "The delivered scene must wait at its start menu.");
+            Assert.IsFalse(boat.TryBoost(), "Waiting at the menu must not consume a boost.");
+            float heldDistance = boat.DistanceTravelled;
+            deadline = Time.realtimeSinceStartup + 0.1f;
+            while (Time.realtimeSinceStartup < deadline) yield return null;
+            Assert.That(boat.DistanceTravelled, Is.EqualTo(heldDistance).Within(0.001f));
+
+            string destination = Path.Combine(Path.GetTempPath(), "sailingout-start-test-" + System.Guid.NewGuid());
+            var capture = new GameObject("Test Start Capture").AddComponent<DemoSoakCapture>();
+            typeof(DemoSoakCapture).GetField("destination", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(capture, destination);
+            deadline = Time.realtimeSinceStartup + 2f;
+            while ((!boat.IsRunning || boat.DistanceTravelled <= heldDistance) &&
+                Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.IsTrue(boat.IsRunning, "Acceptance must activate the same start action as the button.");
+            Assert.That(boat.DistanceTravelled, Is.GreaterThan(heldDistance));
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Object.Destroy(capture.gameObject);
+            if (Directory.Exists(destination)) Directory.Delete(destination, true);
+            yield return new ExitPlayMode();
+        }
+
         private static string[] Snapshot(SpawnManager manager, float originY, float distance) => manager.GetComponentsInChildren<SpawnableIdentity>()
             .Where(x => (x.transform.position.y - originY) * manager.TravelDirectionSign >= distance)
             .Select(x => $"{x.name}|{x.transform.position.x:R}|{x.transform.position.y:R}")

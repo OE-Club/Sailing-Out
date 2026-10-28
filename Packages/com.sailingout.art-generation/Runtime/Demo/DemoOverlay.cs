@@ -11,10 +11,15 @@ namespace SailingOut
         private DemoCameraFollow cameraFollow;
         private Camera worldCamera;
         private bool diagnostics;
+        private bool gameStarted;
         private GUIStyle title;
         private GUIStyle label;
         private GUIStyle fullHeart;
         private GUIStyle emptyHeart;
+        private GUIStyle startTitle;
+        private GUIStyle startSubtitle;
+        private GUIStyle startButton;
+        private GUIStyle startControls;
         private GUIStyle deathTitle;
         private GUIStyle restartButton;
         private Texture2D boostIconTexture;
@@ -25,6 +30,8 @@ namespace SailingOut
             boat = FindAnyObjectByType<DemoVoyager>();
             worldCamera = Camera.main;
             cameraFollow = worldCamera != null ? worldCamera.GetComponent<DemoCameraFollow>() : null;
+            if (boat != null)
+                boat.SetRunning(false);
             Application.targetFrameRate = 60;
         }
 
@@ -40,7 +47,7 @@ namespace SailingOut
                 return;
             if (input.keyCode == KeyCode.F1)
                 diagnostics = !diagnostics;
-            if (input.keyCode == KeyCode.R || input.keyCode == KeyCode.N)
+            if (gameStarted && (input.keyCode == KeyCode.R || input.keyCode == KeyCode.N))
                 Restart(input.keyCode == KeyCode.N);
         }
 
@@ -51,6 +58,14 @@ namespace SailingOut
             if (cameraFollow != null)
                 cameraFollow.SnapToTarget();
             manager.Initialize(seed);
+            gameStarted = true;
+            boat.SetRunning(true);
+        }
+
+        public void BeginGame()
+        {
+            gameStarted = true;
+            boat.SetRunning(true);
         }
 
         private void OnGUI()
@@ -67,6 +82,13 @@ namespace SailingOut
             Matrix4x4 old = GUI.matrix;
             GUI.matrix = Matrix4x4.Scale(Vector3.one * (Screen.height / 540f));
             float width = Screen.width * 540f / Screen.height;
+            if (!gameStarted)
+            {
+                DrawStartScreen(width);
+                GUI.matrix = old;
+                return;
+            }
+
             if (boat.IsDead)
             {
                 DrawDeathScreen(width);
@@ -96,6 +118,51 @@ namespace SailingOut
             GUI.Label(new Rect(30, 500, width - 50, 24),
                 $"A/D  steer     SPACE  guide: {(boat.Guided ? "ON" : "OFF")}     W  boost     R  restart     N  new sea     F1  details", label);
             GUI.matrix = old;
+        }
+
+        private void DrawStartScreen(float width)
+        {
+            GUI.color = new Color(0.008f, 0.045f, 0.065f, 0.82f);
+            GUI.DrawTexture(new Rect(0f, 0f, width, 540f), Texture2D.whiteTexture);
+            GUI.color = Color.white;
+
+            startTitle ??= new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 54,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.92f, 0.98f, 0.91f) }
+            };
+            startSubtitle ??= new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 18,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.57f, 0.86f, 0.86f) }
+            };
+            startButton ??= new GUIStyle(GUI.skin.button)
+            {
+                fontSize = 21,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.025f, 0.12f, 0.14f) },
+                hover = { textColor = new Color(0.02f, 0.08f, 0.1f) },
+                active = { textColor = Color.black }
+            };
+            startControls ??= new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 14,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.82f, 0.92f, 0.88f) }
+            };
+
+            GUI.Label(new Rect(24f, 130f, width - 48f, 72f), "SAILING OUT", startTitle);
+            GUI.Label(new Rect(24f, 202f, width - 48f, 32f), "SURVIVE THE OPEN WATER", startSubtitle);
+            GUI.backgroundColor = new Color(0.35f, 0.94f, 0.62f);
+            if (GUI.Button(new Rect((width - 250f) * 0.5f, 275f, 250f, 58f), "START SAILING", startButton))
+                BeginGame();
+            GUI.backgroundColor = Color.white;
+            GUI.Label(new Rect(24f, 366f, width - 48f, 30f),
+                "A / D  STEER     W  BOOST     SPACE  AUTO NAVIGATION", startControls);
         }
 
         private void DrawBoosts(float width)

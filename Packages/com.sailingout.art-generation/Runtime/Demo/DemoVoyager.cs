@@ -32,6 +32,7 @@ namespace SailingOut
         private float health;
         private SpawnManager manager;
         private bool guided = true;
+        private bool isRunning = true;
         private bool leftHeld;
         private bool rightHeld;
         private bool boostHeld;
@@ -39,6 +40,7 @@ namespace SailingOut
         private float boostTimeRemaining;
 
         public bool Guided => guided;
+        public bool IsRunning => isRunning;
         public const float MaximumHealth = 3f;
         public const float CollisionDamage = 0.5f;
         public float Health => health;
@@ -70,12 +72,24 @@ namespace SailingOut
 
         public bool TryBoost()
         {
-            if (IsDead || IsBoosting || boostsRemaining <= 0)
+            if (IsDead || !isRunning || IsBoosting || boostsRemaining <= 0)
                 return false;
 
             boostsRemaining--;
             boostTimeRemaining = boostDuration;
             return true;
+        }
+
+        public void SetRunning(bool running)
+        {
+            isRunning = running && !IsDead;
+            if (isRunning)
+                return;
+
+            horizontalInput = 0f;
+            leftHeld = false;
+            rightHeld = false;
+            boostHeld = false;
         }
 
         private void Awake()
@@ -97,7 +111,7 @@ namespace SailingOut
             Event input = Event.current;
             if (input.type != EventType.KeyDown && input.type != EventType.KeyUp)
                 return;
-            if (IsDead)
+            if (IsDead || !isRunning)
                 return;
             bool pressed = input.type == EventType.KeyDown;
             if (input.keyCode == KeyCode.A || input.keyCode == KeyCode.LeftArrow)
@@ -129,7 +143,7 @@ namespace SailingOut
 
         private void Update()
         {
-            if (IsBoosting)
+            if (isRunning && IsBoosting)
                 boostTimeRemaining = Mathf.Max(0f, boostTimeRemaining - Time.deltaTime);
         }
 
@@ -141,7 +155,7 @@ namespace SailingOut
 
         private void FixedUpdate()
         {
-            if (IsDead)
+            if (IsDead || !isRunning)
             {
                 body.linearVelocity = Vector2.zero;
                 body.angularVelocity = 0f;
@@ -181,7 +195,7 @@ namespace SailingOut
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (IsDead)
+            if (IsDead || !isRunning)
                 return;
 
             SpawnableIdentity identity = other.GetComponentInParent<SpawnableIdentity>();
@@ -205,6 +219,9 @@ namespace SailingOut
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            if (IsDead || !isRunning)
+                return;
+
             SpawnableIdentity identity = collision.collider.GetComponentInParent<SpawnableIdentity>();
             if (identity == null || identity.Definition == null ||
                 identity.Definition.Category != SpawnCategory.Reef)
