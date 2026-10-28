@@ -35,6 +35,7 @@ namespace SailingOut
         public const float MaximumHealth = 3f;
         public const float CollisionDamage = 0.5f;
         public float Health => health;
+        public bool IsDead => health <= 0f;
         public int BuoyPushDirection => buoyPushDirection;
         public float DistanceTravelled => Mathf.Max(0f,
             (body.position.y - voyageStart.y) * (manager != null ? manager.TravelDirectionSign : 1f));
@@ -48,6 +49,9 @@ namespace SailingOut
             buoySlowdownRemaining = 0f;
             buoyPushRemaining = 0f;
             buoyPushDirection = 0;
+            horizontalInput = 0f;
+            leftHeld = false;
+            rightHeld = false;
             health = MaximumHealth;
             Physics2D.SyncTransforms();
         }
@@ -70,6 +74,8 @@ namespace SailingOut
         {
             Event input = Event.current;
             if (input.type != EventType.KeyDown && input.type != EventType.KeyUp)
+                return;
+            if (IsDead)
                 return;
             bool pressed = input.type == EventType.KeyDown;
             if (input.keyCode == KeyCode.A || input.keyCode == KeyCode.LeftArrow)
@@ -100,6 +106,13 @@ namespace SailingOut
 
         private void FixedUpdate()
         {
+            if (IsDead)
+            {
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+                return;
+            }
+
             Vector2 position = body.position;
             position.x = Mathf.Clamp(position.x + horizontalInput * horizontalSpeed * Time.fixedDeltaTime,
                 -horizontalLimit, horizontalLimit);
@@ -156,6 +169,14 @@ namespace SailingOut
         private void TakeCollisionDamage()
         {
             health = Mathf.Max(0f, health - CollisionDamage);
+            if (IsDead)
+            {
+                horizontalInput = 0f;
+                leftHeld = false;
+                rightHeld = false;
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+            }
         }
     }
 }

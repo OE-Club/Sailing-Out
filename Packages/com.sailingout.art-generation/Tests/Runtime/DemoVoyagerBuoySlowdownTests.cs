@@ -68,6 +68,29 @@ namespace SailingOut.Tests
             Assert.That(boat.Health, Is.EqualTo(2.5f).Within(0.001f));
         }
 
+        [UnityTest]
+        public IEnumerator DeathStopsVoyageAndRestartRestoresBoat()
+        {
+            CreateBoat();
+            MethodInfo damage = typeof(DemoVoyager).GetMethod("TakeCollisionDamage",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(damage);
+            for (int i = 0; i < 6; i++)
+                damage.Invoke(boat, null);
+
+            Assert.IsTrue(boat.IsDead);
+            Assert.That(boat.Health, Is.EqualTo(0f));
+            float deadPosition = boatObject.transform.position.y;
+            yield return new WaitForSeconds(0.15f);
+            Assert.That(boatObject.transform.position.y, Is.EqualTo(deadPosition).Within(0.02f));
+
+            boat.ResetVoyage();
+            Assert.IsFalse(boat.IsDead);
+            Assert.That(boat.Health, Is.EqualTo(DemoVoyager.MaximumHealth));
+            yield return new WaitForSeconds(0.12f);
+            Assert.That(boatObject.transform.position.y, Is.GreaterThan(deadPosition));
+        }
+
         private void CreateBoat()
         {
             boatObject = new GameObject("TestBoat", typeof(Rigidbody2D), typeof(BoxCollider2D),

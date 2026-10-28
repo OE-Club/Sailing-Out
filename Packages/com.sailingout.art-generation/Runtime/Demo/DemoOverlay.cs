@@ -15,6 +15,8 @@ namespace SailingOut
         private GUIStyle label;
         private GUIStyle fullHeart;
         private GUIStyle emptyHeart;
+        private GUIStyle deathTitle;
+        private GUIStyle restartButton;
 
         private void Start()
         {
@@ -32,13 +34,16 @@ namespace SailingOut
             if (input.keyCode == KeyCode.F1)
                 diagnostics = !diagnostics;
             if (input.keyCode == KeyCode.R || input.keyCode == KeyCode.N)
-            {
-                int seed = manager.CurrentSeed + (input.keyCode == KeyCode.N ? 1 : 0);
-                boat.ResetVoyage();
-                if (cameraFollow != null)
-                    cameraFollow.SnapToTarget();
-                manager.Initialize(seed);
-            }
+                Restart(input.keyCode == KeyCode.N);
+        }
+
+        private void Restart(bool newSea)
+        {
+            int seed = manager.CurrentSeed + (newSea ? 1 : 0);
+            boat.ResetVoyage();
+            if (cameraFollow != null)
+                cameraFollow.SnapToTarget();
+            manager.Initialize(seed);
         }
 
         private void OnGUI()
@@ -54,6 +59,13 @@ namespace SailingOut
             Matrix4x4 old = GUI.matrix;
             GUI.matrix = Matrix4x4.Scale(Vector3.one * (Screen.height / 540f));
             float width = Screen.width * 540f / Screen.height;
+            if (boat.IsDead)
+            {
+                DrawDeathScreen(width);
+                GUI.matrix = old;
+                return;
+            }
+
             GUI.color = new Color(0.025f, 0.08f, 0.12f, 0.92f);
             GUI.DrawTexture(new Rect(16, 14, 240, diagnostics ? 150 : 116), Texture2D.whiteTexture);
             GUI.color = Color.white;
@@ -75,6 +87,32 @@ namespace SailingOut
             GUI.Label(new Rect(30, 500, width - 50, 24),
                 $"A/D  steer     SPACE  guide: {(boat.Guided ? "ON" : "OFF")}     R  restart     N  new sea     F1  details", label);
             GUI.matrix = old;
+        }
+
+        private void DrawDeathScreen(float width)
+        {
+            GUI.color = new Color(0.62f, 0.015f, 0.04f, 1f);
+            GUI.DrawTexture(new Rect(0f, 0f, width, 540f), Texture2D.whiteTexture);
+            GUI.color = Color.white;
+
+            deathTitle ??= new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 46,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = Color.white }
+            };
+            restartButton ??= new GUIStyle(GUI.skin.button)
+            {
+                fontSize = 20,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter
+            };
+
+            GUI.Label(new Rect(0f, 190f, width, 72f), "YOU ARE DIE", deathTitle);
+            Rect button = new Rect((width - 220f) * 0.5f, 290f, 220f, 54f);
+            if (GUI.Button(button, "RESTART", restartButton))
+                Restart(false);
         }
 
         private void DrawHearts()
