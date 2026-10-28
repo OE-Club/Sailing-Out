@@ -44,7 +44,7 @@ namespace SailingOut
                 Restart(input.keyCode == KeyCode.N);
         }
 
-        private void Restart(bool newSea)
+        public void Restart(bool newSea)
         {
             int seed = manager.CurrentSeed + (newSea ? 1 : 0);
             boat.ResetVoyage();
