@@ -119,6 +119,35 @@ namespace SailingOut.Tests
             Assert.IsFalse(boat.IsBoosting);
         }
 
+        [UnityTest]
+        public IEnumerator SupplyRestoresHalfAHeartAndDisappears()
+        {
+            CreateBoat();
+            ApplyDamage(1);
+            CreateSupply(0f);
+
+            float timeout = Time.time + 1f;
+            while (buoyObject.activeSelf && Time.time < timeout)
+                yield return new WaitForFixedUpdate();
+
+            Assert.IsFalse(buoyObject.activeSelf, "Collected supply should disappear immediately.");
+            Assert.That(boat.Health, Is.EqualTo(DemoVoyager.MaximumHealth).Within(0.001f));
+        }
+
+        [UnityTest]
+        public IEnumerator SupplyAtFullHealthDisappearsWithoutAddingHealth()
+        {
+            CreateBoat();
+            CreateSupply(0f);
+
+            float timeout = Time.time + 1f;
+            while (buoyObject.activeSelf && Time.time < timeout)
+                yield return new WaitForFixedUpdate();
+
+            Assert.IsFalse(buoyObject.activeSelf, "Supply should still be consumed at full health.");
+            Assert.That(boat.Health, Is.EqualTo(DemoVoyager.MaximumHealth).Within(0.001f));
+        }
+
         private void CreateBoat()
         {
             boatObject = new GameObject("TestBoat", typeof(Rigidbody2D), typeof(BoxCollider2D),
@@ -156,6 +185,28 @@ namespace SailingOut.Tests
             collider.radius = 0.4f;
             buoyObject.transform.position = new Vector3(0f, y, 0f);
             Set(buoyObject.GetComponent<SpawnableIdentity>(), "definition", buoyDefinition);
+        }
+
+        private void CreateSupply(float y)
+        {
+            buoyDefinition = ScriptableObject.CreateInstance<SpawnableDefinition>();
+            Set(buoyDefinition, "category", SpawnCategory.Supply);
+
+            buoyObject = new GameObject("TestSupply", typeof(CircleCollider2D), typeof(SpawnableIdentity));
+            CircleCollider2D collider = buoyObject.GetComponent<CircleCollider2D>();
+            collider.isTrigger = true;
+            collider.radius = 0.4f;
+            buoyObject.transform.position = new Vector3(0f, y, 0f);
+            Set(buoyObject.GetComponent<SpawnableIdentity>(), "definition", buoyDefinition);
+        }
+
+        private void ApplyDamage(int count)
+        {
+            MethodInfo damage = typeof(DemoVoyager).GetMethod("TakeCollisionDamage",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(damage);
+            for (int i = 0; i < count; i++)
+                damage.Invoke(boat, null);
         }
 
         private float ReadSlowdownRemaining()

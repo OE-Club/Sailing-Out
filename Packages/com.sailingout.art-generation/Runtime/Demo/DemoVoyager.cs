@@ -181,15 +181,26 @@ namespace SailingOut
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            SpawnableIdentity identity = other.GetComponentInParent<SpawnableIdentity>();
-            if (identity == null || identity.Definition == null ||
-                identity.Definition.Category != SpawnCategory.Buoy)
+            if (IsDead)
                 return;
 
-            buoySlowdownRemaining = Mathf.Max(0f, buoySlowdownDuration);
-            buoyPushRemaining = Mathf.Max(0f, buoyPushDuration);
-            buoyPushDirection = Random.value < 0.5f ? -1 : 1;
-            TakeCollisionDamage();
+            SpawnableIdentity identity = other.GetComponentInParent<SpawnableIdentity>();
+            if (identity == null || identity.Definition == null)
+                return;
+
+            switch (identity.Definition.Category)
+            {
+                case SpawnCategory.Buoy:
+                    buoySlowdownRemaining = Mathf.Max(0f, buoySlowdownDuration);
+                    buoyPushRemaining = Mathf.Max(0f, buoyPushDuration);
+                    buoyPushDirection = Random.value < 0.5f ? -1 : 1;
+                    TakeCollisionDamage();
+                    break;
+                case SpawnCategory.Supply:
+                    health = Mathf.Min(MaximumHealth, health + CollisionDamage);
+                    identity.gameObject.SetActive(false);
+                    break;
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
