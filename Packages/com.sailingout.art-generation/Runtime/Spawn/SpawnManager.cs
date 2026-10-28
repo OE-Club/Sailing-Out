@@ -38,9 +38,11 @@ namespace SailingOut
         public int PooledObjectCount => pooledObjectCount;
         public int ManagedObjectCount => active.Count + pooledObjectCount;
         public GenerationProfile Profile => profile;
+        public float TravelDirectionSign => profile != null ? profile.TravelDirectionSign : 1f;
         public float SafeLaneWidth => safeLaneWidth;
         public float GeneratedThroughY => initialized && highestGeneratedSegment != long.MinValue
-            ? (highestGeneratedSegment + 1) * segmentLength : float.NegativeInfinity;
+            ? runOriginY + (highestGeneratedSegment + 1) * segmentLength * TravelDirectionSign
+            : float.NegativeInfinity;
 
         /// <summary>Assign once before Initialize. Camera size, boat bounds and world width are frozen per run.</summary>
         public void Configure(GenerationProfile configuration, Camera camera, Collider2D boat, bool automatic = true)
@@ -55,7 +57,7 @@ namespace SailingOut
         }
 
         public float GetSafeLaneCenter(float worldY) => GenerationMath.LaneCenterAt(currentSeed,
-            worldY, segmentLength, runOriginX, maxLaneOffset);
+            ToProgressY(worldY), segmentLength, runOriginX, maxLaneOffset);
 
         private void Start()
         {
@@ -116,10 +118,12 @@ namespace SailingOut
             if (!initialized || profile == null || worldCamera == null)
                 return;
 
-            float aheadY = Mathf.Max(playerY + profile.GetAheadDistance(worldCamera),
-                worldCamera.transform.position.y + worldCamera.orthographicSize * 2f);
-            long firstSegment = Mathf.FloorToInt((playerY - profile.GetRecycleDistance(worldCamera)) / segmentLength);
-            long lastSegment = Mathf.FloorToInt(aheadY / segmentLength);
+            float playerProgress = ToProgressY(playerY);
+            float cameraProgress = ToProgressY(worldCamera.transform.position.y);
+            float aheadProgress = Mathf.Max(playerProgress + profile.GetAheadDistance(worldCamera),
+                cameraProgress + worldCamera.orthographicSize * 2f);
+            long firstSegment = Mathf.FloorToInt((playerProgress - profile.GetRecycleDistance(worldCamera)) / segmentLength);
+            long lastSegment = Mathf.FloorToInt(aheadProgress / segmentLength);
 
             if (highestGeneratedSegment == long.MinValue)
                 highestGeneratedSegment = firstSegment - 1;
@@ -141,10 +145,10 @@ namespace SailingOut
             if (!initialized || profile == null || worldCamera == null)
                 return;
 
-            float recycleY = playerY - profile.GetRecycleDistance(worldCamera);
+            float recycleProgress = ToProgressY(playerY) - profile.GetRecycleDistance(worldCamera);
             for (int i = active.Count - 1; i >= 0; i--)
             {
-                if (active[i].Position.y >= recycleY)
+                if (ToProgressY(active[i].Position.y) >= recycleProgress)
                     continue;
 
                 ReturnToPool(active[i]);
@@ -164,11 +168,11 @@ namespace SailingOut
 
         private void GenerateSegment(long segment)
         {
-            float yStart = segment * segmentLength;
-            float yEnd = yStart + segmentLength;
+            float progressStart = segment * segmentLength;
+            float progressEnd = progressStart + segmentLength;
             float visibleCenterX = runOriginX;
             float viewHalfWidth = runHalfWidth;
-            float distance = Mathf.Max(0f, yStart - runOriginY);
+            float distance = Mathf.Max(0f, progressStart);
             GenerationStage stage = profile.GetStage(distance);
             SeededRandom random = new SeededRandom(SeededRandom.SegmentSeed(currentSeed, segment));
             for (int c = 0; c < Categories.Length; c++)
@@ -191,7 +195,7 @@ namespace SailingOut
                     if (prefab == null)
                         continue;
 
-                    if (TryPlace(category, definition, yStart, yEnd, visibleCenterX,
+                    if (TryPlace(category, definition, progressStart, progressEnd, visibleCenterX,
                         runOriginX,
                         viewHalfWidth, safeLaneWidth, maxLaneOffset, segmentLength, ref random,
                         out Vector2 position))
@@ -211,8 +215,8 @@ namespace SailingOut
         private bool TryPlace(
             SpawnCategory category,
             SpawnableDefinition definition,
-            float yStart,
-            float yEnd,
+            float progressStart,
+            float progressEnd,
             float visibleCenterX,
             float laneOriginX,
             float viewHalfWidth,
@@ -227,8 +231,8 @@ namespace SailingOut
             float maxX = visibleCenterX + viewHalfWidth - profile.HorizontalEdgeBuffer - radius;
             // Reserving half the largest spacing at each boundary makes adjacent
             // segments independent of the recycling cadence and teleport history.
-            float minY = yStart + radius + boundarySeparation * 0.5f;
-            float maxY = yEnd - radius - boundarySeparation * 0.5f;
+            float minY = progressStart + radius + boundarySeparation * 0.5f;
+            float maxY = progressEnd - radius - boundarySeparation * 0.5f;
 
             if (maxX <= minX || maxY <= minY)
             {
@@ -238,13 +242,13 @@ namespace SailingOut
 
             for (int attempt = 0; attempt < profile.PlacementAttempts; attempt++)
             {
-                float y = random.Range(minY, maxY);
-                float laneX = GenerationMath.LaneCenterAt(currentSeed, y, segmentLength, laneOriginX, maxLaneOffset);
+                float progressY = random.Range(minY, maxY);
+                float laneX = GenerationMath.LaneCenterAt(currentSeed, progressY, segmentLength, laneOriginX, maxLaneOffset);
                 float x;
 
                 if (definition.BlocksPath)
                 {
-                    Vector2 safeBounds = GenerationMath.LaneBoundsForCircle(currentSeed, y,
+                    Vector2 safeBounds = GenerationMath.LaneBoundsForCircle(currentSeed, progressY,
                         segmentLength, laneOriginX, maxLaneOffset, safeLaneWidth, radius + boatHalfLength);
                     float leftWidth = Mathf.Max(0f, safeBounds.x - minX);
                     float rightStart = Mathf.Min(maxX, safeBounds.y);
@@ -254,7 +258,7 @@ namespace SailingOut
 
                     bool chooseRight = rightWidth > 0f && (leftWidth <= 0f || random.Range(0f, leftWidth + rightWidth) >= leftWidth);
                     x = chooseRight ? random.Range(rightStart, maxX) : random.Range(minX, safeBounds.x);
-                    if (!GenerationMath.IsOutsideSafeLane(currentSeed, x, y, segmentLength, laneOriginX,
+                    if (!GenerationMath.IsOutsideSafeLane(currentSeed, x, progressY, segmentLength, laneOriginX,
                         maxLaneOffset, safeLaneWidth, radius + boatHalfLength))
                         continue;
                 }
@@ -268,7 +272,7 @@ namespace SailingOut
                     x = random.Range(minX, maxX);
                 }
 
-                Vector2 candidate = new Vector2(x, y);
+                Vector2 candidate = new Vector2(x, ToWorldY(progressY));
                 if (!HasClearance(candidate, radius, definition.MinimumDistance))
                     continue;
 
@@ -279,6 +283,12 @@ namespace SailingOut
             position = default;
             return false;
         }
+
+        private float ToProgressY(float worldY) =>
+            (worldY - runOriginY) * TravelDirectionSign;
+
+        private float ToWorldY(float progressY) =>
+            runOriginY + progressY * TravelDirectionSign;
 
         private bool HasClearance(Vector2 candidate, float radius, float minimumDistance)
         {

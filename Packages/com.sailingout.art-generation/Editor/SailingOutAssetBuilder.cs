@@ -438,6 +438,7 @@ namespace SailingOut.Editor
             }
 
             SerializedObject serialized = new SerializedObject(profile);
+            serialized.FindProperty("travelDownward").boolValue = true;
             serialized.FindProperty("segmentLengthScreens").floatValue = 2f;
             serialized.FindProperty("generateAheadScreens").floatValue = 2.5f;
             serialized.FindProperty("recycleBehindScreens").floatValue = 1.5f;
@@ -513,7 +514,7 @@ namespace SailingOut.Editor
             camera.allowMSAA = false;
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(0.015f, 0.18f, 0.27f, 1f);
-            cameraObject.transform.position = new Vector3(0f, 3f, -10f);
+            cameraObject.transform.position = new Vector3(0f, 3f * profile.TravelDirectionSign, -10f);
             GameObject background = new GameObject("Tiled Sea Background");
             background.transform.SetParent(cameraObject.transform, false);
             background.transform.localPosition = new Vector3(0f, 0f, 10f);

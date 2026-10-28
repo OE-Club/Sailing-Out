@@ -46,6 +46,7 @@ namespace SailingOut
     public sealed class GenerationProfile : ScriptableObject
     {
         [Header("Endless field")]
+        [SerializeField] private bool travelDownward;
         [SerializeField, Min(0.25f)] private float segmentLengthScreens = 2f;
         [SerializeField, Min(1f)] private float generateAheadScreens = 2.5f;
         [SerializeField, Min(0.25f)] private float recycleBehindScreens = 1.5f;
@@ -67,6 +68,8 @@ namespace SailingOut
         [SerializeField] private List<GenerationStage> stages = new List<GenerationStage>();
         [SerializeField] private AnimationCurve obstacleDensityByDistance = AnimationCurve.Linear(0f, 1f, 1200f, 1.25f);
 
+        public bool TravelDownward => travelDownward;
+        public float TravelDirectionSign => travelDownward ? -1f : 1f;
         public float SegmentLengthScreens => segmentLengthScreens;
         public float GenerateAheadScreens => generateAheadScreens;
         public float RecycleBehindScreens => recycleBehindScreens;

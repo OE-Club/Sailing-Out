@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2c9cf8520c3d74d82659f765212259, type: 3}
   m_Name: DefaultGenerationProfile
   m_EditorClassIdentifier: SailingOut.Runtime::SailingOut.GenerationProfile
+  travelDownward: 1
   segmentLengthScreens: 2
   generateAheadScreens: 2.5
   recycleBehindScreens: 1.5

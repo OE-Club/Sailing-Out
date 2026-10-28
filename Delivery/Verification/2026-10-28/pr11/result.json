@@ -1,0 +1,26 @@
+{
+  "unity": "6000.6.1f1 (7efac9f6c10e)",
+  "edit_passed": 11,
+  "play_passed": 16,
+  "repository_passed": 22,
+  "package_sha256": "d0e9df7cd3c8c5c2dfbf2df69ed2789b3f52bc3bb2668a2e1a1d841efe8230bc",
+  "delivery": [
+    "export",
+    "clean import",
+    "reference validation",
+    "Windows x64 Mono build",
+    "Mac Mono build"
+  ],
+  "soak": "Running; no pass claimed. Historical 6000.6.7f1 reports do not validate this change.",
+  "log_sha256": {
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11-rebuild.log": "bbe2ef9ae4d692ebd53e1e6a53a744896380f6e2eb3c409ae1557db72fd43487",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11-edit.log": "39b52c4b022e002e22c1fe8ddc174a1fd86967dd31fe7bf437a8ba354bc53ae8",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11-play.log": "2f0b4aa1c3c0cec25ca0221d4242150bf03a305f211fc62ed00b8cbd6b4c9c27",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11/mac-build.log": "543613ff1848af9821209e42751609a8965d2e0372834bc9a5e7b8e632fccc5f",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11/soak-player.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11/windows-build.log": "1a2558d0c29ba4c31fa89f9354134e67fa29ce876c3a7384047595611f6f1235",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11/validate.log": "4319d98677a2bc6be82d2f2df02f8971c2daf3233211d1e2b9c750135034e79e",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11/export.log": "52102ad83626138dba7934f6d2051519870007c1f4ae8b0e58bac51e64952119",
+    "/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr11/import.log": "3f6a7ee1ad578dd6853fac1d7a744624e6d0de6941cd508c6b3f767a754a52aa"
+  }
+}
