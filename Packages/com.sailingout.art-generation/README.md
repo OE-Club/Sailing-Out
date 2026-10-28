@@ -12,6 +12,7 @@ This embedded Unity package supplies the runtime portion of the art/decoration m
 - collecting a supply restores half a heart up to full health, then hides the supply even if health was already full;
 - reaching zero hearts stops the boat and displays a full-screen red death screen with a restart button;
 - W activates one of three 3-second, 2x speed boosts per voyage; green lightning charges appear in the upper-right HUD;
+- the demo's base sailing and steering speeds are increased by about 20%; boost count and duration stay the same;
 - non-blocking floating-decoration variants and tiled water/foam background;
 - pooled reuse and lifecycle callbacks;
 - distance-based generation stages;

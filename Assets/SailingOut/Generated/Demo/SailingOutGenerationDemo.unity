@@ -319,8 +319,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4b12c1b64fd2ee44bade7a1c9cf9c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SailingOut.Runtime::SailingOut.DemoVoyager
-  forwardSpeed: 5
-  horizontalSpeed: 6
+  forwardSpeed: 6
+  horizontalSpeed: 7.2
   horizontalLimit: 7
 --- !u!50 &343676988
 Rigidbody2D:

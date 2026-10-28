@@ -48,6 +48,27 @@ namespace SailingOut.Tests
             Assert.That(boat.DistanceTravelled, Is.EqualTo(0f).Within(0.001f));
         }
 
+        [UnityTest]
+        public IEnumerator DefaultSailingAndSteeringSpeedsAreIncreased()
+        {
+            boatObject = new GameObject("TestBoat", typeof(Rigidbody2D));
+            boatObject.AddComponent<DemoVoyager>();
+            yield return null;
+
+            Assert.That(GetFloat(boatObject.GetComponent<DemoVoyager>(), "forwardSpeed"),
+                Is.EqualTo(6f).Within(0.001f));
+            Assert.That(GetFloat(boatObject.GetComponent<DemoVoyager>(), "horizontalSpeed"),
+                Is.EqualTo(7.2f).Within(0.001f));
+        }
+
+        private static float GetFloat(object target, string fieldName)
+        {
+            FieldInfo field = target.GetType().GetField(fieldName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(field, $"Expected serialized field {fieldName}");
+            return (float)field.GetValue(target);
+        }
+
         private static void Set(object target, string fieldName, object value)
         {
             FieldInfo field = target.GetType().GetField(fieldName,
