@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="25" result="Passed" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:50Z" duration="2.3324128">
+  <test-suite type="TestSuite" id="1035" name="clean" fullname="clean" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:50Z" duration="2.332413" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1031" name="SailingOut.ArtGeneration.Tests.dll" fullname="/Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr18/clean/Library/ScriptAssemblies/SailingOut.ArtGeneration.Tests.dll" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:50Z" duration="2.326070" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="84348" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1032" name="SailingOut" fullname="SailingOut" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:50Z" duration="2.325408" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1033" name="Tests" fullname="SailingOut.Tests" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:50Z" duration="2.325065" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="DemoVoyagerBuoySlowdownTests" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:49Z" duration="1.579195" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="BoatRemainsStoppedUntilStarted" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.BoatRemainsStoppedUntilStarted" methodname="BoatRemainsStoppedUntilStarted" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="1489595452" result="Passed" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:47Z" duration="0.280162" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="BoostUsesThreeChargesAndCannotRestartWhileActive" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.BoostUsesThreeChargesAndCannotRestartWhileActive" methodname="BoostUsesThreeChargesAndCannotRestartWhileActive" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="2143867575" result="Passed" start-time="2026-10-28 15:41:47Z" end-time="2026-10-28 15:41:48Z" duration="0.151811" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="BuoyContactSlowsForHalfASecondThenRestoresSpeed" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.BuoyContactSlowsForHalfASecondThenRestoresSpeed" methodname="BuoyContactSlowsForHalfASecondThenRestoresSpeed" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="1691934479" result="Passed" start-time="2026-10-28 15:41:48Z" end-time="2026-10-28 15:41:48Z" duration="0.738736" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="DeathStopsVoyageAndRestartRestoresBoat" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.DeathStopsVoyageAndRestartRestoresBoat" methodname="DeathStopsVoyageAndRestartRestoresBoat" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="438326757" result="Passed" start-time="2026-10-28 15:41:48Z" end-time="2026-10-28 15:41:49Z" duration="0.271149" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="ReefContactRemovesHalfAHeart" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.ReefContactRemovesHalfAHeart" methodname="ReefContactRemovesHalfAHeart" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="420843433" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.088400" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1009" name="ResetVoyageRestoresBoostChargesAndCancelsAnActiveBoost" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.ResetVoyageRestoresBoostChargesAndCancelsAnActiveBoost" methodname="ResetVoyageRestoresBoostChargesAndCancelsAnActiveBoost" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="572235787" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.001211" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="SupplyAtFullHealthDisappearsWithoutAddingHealth" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.SupplyAtFullHealthDisappearsWithoutAddingHealth" methodname="SupplyAtFullHealthDisappearsWithoutAddingHealth" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="853839254" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.018665" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="SupplyRestoresHalfAHeartAndDisappears" fullname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests.SupplyRestoresHalfAHeartAndDisappears" methodname="SupplyRestoresHalfAHeartAndDisappears" classname="SailingOut.Tests.DemoVoyagerBuoySlowdownTests" runstate="Runnable" seed="1013925300" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.019669" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1010" name="DemoVoyagerLeanTests" fullname="SailingOut.Tests.DemoVoyagerLeanTests" classname="SailingOut.Tests.DemoVoyagerLeanTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.603054" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1012" name="DownwardFacingHullLeansIntoTheTurnAndRestartResetsRotation" fullname="SailingOut.Tests.DemoVoyagerLeanTests.DownwardFacingHullLeansIntoTheTurnAndRestartResetsRotation" methodname="DownwardFacingHullLeansIntoTheTurnAndRestartResetsRotation" classname="SailingOut.Tests.DemoVoyagerLeanTests" runstate="Runnable" seed="974433999" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.201114" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="SteeringLeansTheHullIntoTheTurnAndReturnsToCenter" fullname="SailingOut.Tests.DemoVoyagerLeanTests.SteeringLeansTheHullIntoTheTurnAndReturnsToCenter" methodname="SteeringLeansTheHullIntoTheTurnAndReturnsToCenter" classname="SailingOut.Tests.DemoVoyagerLeanTests" runstate="Runnable" seed="1398368283" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.401099" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1013" name="DemoVoyagerTests" fullname="SailingOut.Tests.DemoVoyagerTests" classname="SailingOut.Tests.DemoVoyagerTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.056280" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1015" name="CameraLooksAheadForBothTravelDirections" fullname="SailingOut.Tests.DemoVoyagerTests.CameraLooksAheadForBothTravelDirections" methodname="CameraLooksAheadForBothTravelDirections" classname="SailingOut.Tests.DemoVoyagerTests" runstate="Runnable" seed="1770779547" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.003516" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="DefaultSailingAndSteeringSpeedsAreIncreased" fullname="SailingOut.Tests.DemoVoyagerTests.DefaultSailingAndSteeringSpeedsAreIncreased" methodname="DefaultSailingAndSteeringSpeedsAreIncreased" classname="SailingOut.Tests.DemoVoyagerTests" runstate="Runnable" seed="220057204" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.001086" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="DownwardProfileMovesVoyagerDownAndTurnsItsBow" fullname="SailingOut.Tests.DemoVoyagerTests.DownwardProfileMovesVoyagerDownAndTurnsItsBow" methodname="DownwardProfileMovesVoyagerDownAndTurnsItsBow" classname="SailingOut.Tests.DemoVoyagerTests" runstate="Runnable" seed="230678999" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.050838" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1017" name="SeededRandomTests" fullname="SailingOut.Tests.SeededRandomTests" classname="SailingOut.Tests.SeededRandomTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.010393" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1021" name="LanePathTransitionsSmoothlyAcrossSegmentBoundary" fullname="SailingOut.Tests.SeededRandomTests.LanePathTransitionsSmoothlyAcrossSegmentBoundary" methodname="LanePathTransitionsSmoothlyAcrossSegmentBoundary" classname="SailingOut.Tests.SeededRandomTests" runstate="Runnable" seed="2131199872" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.001266" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="SafeLaneIsPreservedForTheFullReefColliderRadius" fullname="SailingOut.Tests.SeededRandomTests.SafeLaneIsPreservedForTheFullReefColliderRadius" methodname="SafeLaneIsPreservedForTheFullReefColliderRadius" classname="SailingOut.Tests.SeededRandomTests" runstate="Runnable" seed="1479688823" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.006914" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="SameRunSeedProducesSameLaneAtEveryWorldPosition" fullname="SailingOut.Tests.SeededRandomTests.SameRunSeedProducesSameLaneAtEveryWorldPosition" methodname="SameRunSeedProducesSameLaneAtEveryWorldPosition" classname="SailingOut.Tests.SeededRandomTests" runstate="Runnable" seed="1699021654" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.000701" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="SameSeedProducesSameSequence" fullname="SailingOut.Tests.SeededRandomTests.SameSeedProducesSameSequence" methodname="SameSeedProducesSameSequence" classname="SailingOut.Tests.SeededRandomTests" runstate="Runnable" seed="2121985147" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.000416" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="SegmentSeedIsStableAndChangesBetweenSegments" fullname="SailingOut.Tests.SeededRandomTests.SegmentSeedIsStableAndChangesBetweenSegments" methodname="SegmentSeedIsStableAndChangesBetweenSegments" classname="SailingOut.Tests.SeededRandomTests" runstate="Runnable" seed="68855294" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.000100" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1023" name="SpawnManagerTests" fullname="SailingOut.Tests.SpawnManagerTests" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:50Z" duration="0.074867" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1026" name="ActiveObjectsStayWithinConfiguredLimitAcrossLongJumps" fullname="SailingOut.Tests.SpawnManagerTests.ActiveObjectsStayWithinConfiguredLimitAcrossLongJumps" methodname="ActiveObjectsStayWithinConfiguredLimitAcrossLongJumps" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" seed="347667898" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.007567" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="DownwardTravelGeneratesAheadAndRecyclesBehind" fullname="SailingOut.Tests.SpawnManagerTests.DownwardTravelGeneratesAheadAndRecyclesBehind" methodname="DownwardTravelGeneratesAheadAndRecyclesBehind" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" seed="1222714596" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.002361" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="PooledObjectCountStaysWithinConfiguredLimit" fullname="SailingOut.Tests.SpawnManagerTests.PooledObjectCountStaysWithinConfiguredLimit" methodname="PooledObjectCountStaysWithinConfiguredLimit" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" seed="479439403" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.001545" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="RecycleAndClearReturnObjectsWithoutChangingLayoutForSeed" fullname="SailingOut.Tests.SpawnManagerTests.RecycleAndClearReturnObjectsWithoutChangingLayoutForSeed" methodname="RecycleAndClearReturnObjectsWithoutChangingLayoutForSeed" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" seed="441548148" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.001445" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1030" name="RecyclingCadenceAndPlayerSteeringDoNotChangeSegmentLayouts" fullname="SailingOut.Tests.SpawnManagerTests.RecyclingCadenceAndPlayerSteeringDoNotChangeSegmentLayouts" methodname="RecyclingCadenceAndPlayerSteeringDoNotChangeSegmentLayouts" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" seed="1422678112" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.003257" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="SameSeedAndStartPositionCreateSameSpawnLayout" fullname="SailingOut.Tests.SpawnManagerTests.SameSeedAndStartPositionCreateSameSpawnLayout" methodname="SameSeedAndStartPositionCreateSameSpawnLayout" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" seed="375258701" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:49Z" duration="0.002053" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="TenMinutesAtSixtyStepsPerSecondKeepPoolBoundedAndRouteOpen" fullname="SailingOut.Tests.SpawnManagerTests.TenMinutesAtSixtyStepsPerSecondKeepPoolBoundedAndRouteOpen" methodname="TenMinutesAtSixtyStepsPerSecondKeepPoolBoundedAndRouteOpen" classname="SailingOut.Tests.SpawnManagerTests" runstate="Runnable" seed="146179399" result="Passed" start-time="2026-10-28 15:41:49Z" end-time="2026-10-28 15:41:50Z" duration="0.055068" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Simulated 600 seconds at 60 steps/s: peak managed 6; final allocated 6.
+Saving results to: /Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr18-clean-play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

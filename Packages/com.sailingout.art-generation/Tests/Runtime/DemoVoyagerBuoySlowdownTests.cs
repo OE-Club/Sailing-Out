@@ -166,6 +166,24 @@ namespace SailingOut.Tests
             Assert.That(boatObject.transform.position.y, Is.GreaterThan(startY));
         }
 
+        [UnityTest]
+        public IEnumerator ResetVoyageRestoresBoostChargesAndCancelsAnActiveBoost()
+        {
+            CreateBoat();
+            yield return null;
+            Assert.IsTrue(boat.TryBoost());
+            Assert.IsTrue(boat.IsBoosting);
+            Assert.AreEqual(2, boat.BoostsRemaining);
+
+            boat.ResetVoyage();
+
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Assert.IsFalse(boat.IsBoosting);
+            Assert.That(boat.DistanceTravelled, Is.EqualTo(0f).Within(0.001f));
+            Assert.IsTrue(boat.TryBoost(), "A new boost must be available immediately after restart.");
+            Assert.AreEqual(2, boat.BoostsRemaining);
+        }
+
         private void CreateBoat()
         {
             boatObject = new GameObject("TestBoat", typeof(Rigidbody2D), typeof(BoxCollider2D),

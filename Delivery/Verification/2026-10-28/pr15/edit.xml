@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 15:04:48Z" end-time="2026-10-28 15:04:48Z" duration="0.1566074">
+  <test-suite type="TestSuite" id="1000" name="Sailing Out" fullname="Sailing Out" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-28 15:04:48Z" end-time="2026-10-28 15:04:48Z" duration="0.156607" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1008" name="SailingOut.Asset.Tests.dll" fullname="/Users/chips_fish/Documents/Codex/2026-10-28/task/sailing-out/Library/ScriptAssemblies/SailingOut.Asset.Tests.dll" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-28 15:03:35Z" end-time="2026-10-28 15:04:45Z" duration="69.670489" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="58024" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1009" name="SailingOut" fullname="SailingOut" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-28 15:03:35Z" end-time="2026-10-28 15:04:45Z" duration="69.670114" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1010" name="Tests" fullname="SailingOut.Tests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-28 15:03:35Z" end-time="2026-10-28 15:04:45Z" duration="69.669922" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="DeliveryTests" fullname="SailingOut.Tests.DeliveryTests" classname="SailingOut.Tests.DeliveryTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-28 15:03:35Z" end-time="2026-10-28 15:04:45Z" duration="69.669077" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1007" name="AcceptanceCaptureRejectsAStationaryBoat" fullname="SailingOut.Tests.DeliveryTests.AcceptanceCaptureRejectsAStationaryBoat" methodname="AcceptanceCaptureRejectsAStationaryBoat" classname="SailingOut.Tests.DeliveryTests" runstate="Runnable" seed="1465006434" result="Passed" start-time="2026-10-28 15:03:26Z" end-time="2026-10-28 15:03:33Z" duration="6.788922" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+              </properties>
+              <output><![CDATA[Result: FAIL
+Reason: No measured voyage progress for five seconds
+Unity: 6000.6.1f1
+GPU: Apple M1 Pro
+Resolution: 640x480
+Elapsed seconds: 5.02
+Measured total distance: 0.00
+Longest voyage: 0.30
+Seconds in active motion: 0.25
+Death restarts: 0
+Observed categories: Buoy, Seabird
+Measured frames (after 10s): 0
+Peak active: 13
+Peak managed: 14
+Allocated at 180s: 14
+Final allocated: 14
+
+]]></output>
+            </test-case>
+            <test-case id="1006" name="AcceptanceCaptureRestartsADeadVoyageThroughDemoControls" fullname="SailingOut.Tests.DeliveryTests.AcceptanceCaptureRestartsADeadVoyageThroughDemoControls" methodname="AcceptanceCaptureRestartsADeadVoyageThroughDemoControls" classname="SailingOut.Tests.DeliveryTests" runstate="Runnable" seed="1176837323" result="Passed" start-time="2026-10-28 15:03:33Z" end-time="2026-10-28 15:03:34Z" duration="1.265774" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="AllArtAndColliderRolesArePresentAndPixelImportsAreCorrect" fullname="SailingOut.Tests.DeliveryTests.AllArtAndColliderRolesArePresentAndPixelImportsAreCorrect" methodname="AllArtAndColliderRolesArePresentAndPixelImportsAreCorrect" classname="SailingOut.Tests.DeliveryTests" runstate="Runnable" seed="1682850617" result="Passed" start-time="2026-10-28 15:03:34Z" end-time="2026-10-28 15:03:34Z" duration="0.014692" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1002" name="BuilderWritesDownwardDirectionForNewAndExistingProfiles" fullname="SailingOut.Tests.DeliveryTests.BuilderWritesDownwardDirectionForNewAndExistingProfiles" methodname="BuilderWritesDownwardDirectionForNewAndExistingProfiles" classname="SailingOut.Tests.DeliveryTests" runstate="Runnable" seed="1771673718" result="Passed" start-time="2026-10-28 15:03:34Z" end-time="2026-10-28 15:03:34Z" duration="0.062976" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1005" name="IncludedDemoRunsAndPooledAnimationRestartsAtFirstFrame" fullname="SailingOut.Tests.DeliveryTests.IncludedDemoRunsAndPooledAnimationRestartsAtFirstFrame" methodname="IncludedDemoRunsAndPooledAnimationRestartsAtFirstFrame" classname="SailingOut.Tests.DeliveryTests" runstate="Runnable" seed="1745937259" result="Passed" start-time="2026-10-28 15:03:34Z" end-time="2026-10-28 15:04:45Z" duration="70.749620" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="OpeningStageContainsOnlyBuoysAndSeabirdsApartFromWaterAndPlayer" fullname="SailingOut.Tests.DeliveryTests.OpeningStageContainsOnlyBuoysAndSeabirdsApartFromWaterAndPlayer" methodname="OpeningStageContainsOnlyBuoysAndSeabirdsApartFromWaterAndPlayer" classname="SailingOut.Tests.DeliveryTests" runstate="Runnable" seed="835861116" result="Passed" start-time="2026-10-28 15:04:45Z" end-time="2026-10-28 15:04:45Z" duration="0.002340" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1021" name="SailingOut.EditModeTests.dll" fullname="/Users/chips_fish/Documents/Codex/2026-10-28/task/sailing-out/Library/ScriptAssemblies/SailingOut.EditModeTests.dll" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-28 15:04:48Z" end-time="2026-10-28 15:04:48Z" duration="0.071920" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="58024" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestFixture" id="1011" name="SailingDynamicsTests" fullname="SailingDynamicsTests" classname="SailingDynamicsTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-28 15:04:45Z" end-time="2026-10-28 15:04:45Z" duration="0.008726" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1012" name="BeamReachAcceleratesWhileHeadwindStops" fullname="SailingDynamicsTests.BeamReachAcceleratesWhileHeadwindStops" methodname="BeamReachAcceleratesWhileHeadwindStops" classname="SailingDynamicsTests" runstate="Runnable" seed="851658919" result="Passed" start-time="2026-10-28 15:04:45Z" end-time="2026-10-28 15:04:45Z" duration="0.002790" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1015" name="InputsClampAndResetRestoresSpawn" fullname="SailingDynamicsTests.InputsClampAndResetRestoresSpawn" methodname="InputsClampAndResetRestoresSpawn" classname="SailingDynamicsTests" runstate="Runnable" seed="1601576600" result="Passed" start-time="2026-10-28 15:04:45Z" end-time="2026-10-28 15:04:45Z" duration="0.002053" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1013" name="LettingSailOutImprovesDownwindDrive" fullname="SailingDynamicsTests.LettingSailOutImprovesDownwindDrive" methodname="LettingSailOutImprovesDownwindDrive" classname="SailingDynamicsTests" runstate="Runnable" seed="1530623128" result="Passed" start-time="2026-10-28 15:04:45Z" end-time="2026-10-28 15:04:45Z" duration="0.001316" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1014" name="PullingSailInImprovesCloseHauledDrive" fullname="SailingDynamicsTests.PullingSailInImprovesCloseHauledDrive" methodname="PullingSailInImprovesCloseHauledDrive" classname="SailingDynamicsTests" runstate="Runnable" seed="442646394" result="Passed" start-time="2026-10-28 15:04:45Z" end-time="2026-10-28 15:04:45Z" duration="0.001576" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1016" name="SailingReloadTests" fullname="SailingReloadTests" classname="SailingReloadTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-28 15:04:48Z" end-time="2026-10-28 15:04:48Z" duration="0.065333" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1017" name="ActualRepeatedScriptReloadPreservesVoyageAndRestoresReferences" fullname="SailingReloadTests.ActualRepeatedScriptReloadPreservesVoyageAndRestoresReferences" methodname="ActualRepeatedScriptReloadPreservesVoyageAndRestoresReferences" classname="SailingReloadTests" runstate="Runnable" seed="1383971122" result="Passed" start-time="2026-10-28 15:04:45Z" end-time="2026-10-28 15:04:48Z" duration="3.492531" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1018" name="VoyageQASafetyTests" fullname="VoyageQASafetyTests" classname="VoyageQASafetyTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-28 15:04:48Z" end-time="2026-10-28 15:04:48Z" duration="0.004235" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1019" name="CancelledSceneSaveDoesNotSwitchScenesOrStartQA" fullname="VoyageQASafetyTests.CancelledSceneSaveDoesNotSwitchScenesOrStartQA" methodname="CancelledSceneSaveDoesNotSwitchScenesOrStartQA" classname="VoyageQASafetyTests" runstate="Runnable" seed="939374161" result="Passed" start-time="2026-10-28 15:04:48Z" end-time="2026-10-28 15:04:48Z" duration="0.001667" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1020" name="RepeatedPlayEntryClearsDestroyedWrappersAndPendingCapture" fullname="VoyageQASafetyTests.RepeatedPlayEntryClearsDestroyedWrappersAndPendingCapture" methodname="RepeatedPlayEntryClearsDestroyedWrappersAndPendingCapture" classname="VoyageQASafetyTests" runstate="Runnable" seed="1731294075" result="Passed" start-time="2026-10-28 15:04:48Z" end-time="2026-10-28 15:04:48Z" duration="0.001035" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Saving results to: /Users/chips_fish/Documents/Codex/2026-10-28/task/verification/pr15-edit.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

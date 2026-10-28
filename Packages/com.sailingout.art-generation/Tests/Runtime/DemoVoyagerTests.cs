@@ -11,6 +11,7 @@ namespace SailingOut.Tests
         private GameObject boatObject;
         private GameObject managerObject;
         private GenerationProfile profile;
+        private GameObject cameraObject;
 
         [UnityTearDown]
         public IEnumerator TearDown()
@@ -21,6 +22,8 @@ namespace SailingOut.Tests
                 Object.Destroy(managerObject);
             if (profile != null)
                 Object.Destroy(profile);
+            if (cameraObject != null)
+                Object.Destroy(cameraObject);
             yield return null;
         }
 
@@ -46,6 +49,30 @@ namespace SailingOut.Tests
             boat.ResetVoyage();
             Assert.That(boatObject.GetComponent<Rigidbody2D>().position.y, Is.EqualTo(0f).Within(0.001f));
             Assert.That(boat.DistanceTravelled, Is.EqualTo(0f).Within(0.001f));
+        }
+
+        [UnityTest]
+        public IEnumerator CameraLooksAheadForBothTravelDirections()
+        {
+            profile = ScriptableObject.CreateInstance<GenerationProfile>();
+            managerObject = new GameObject("TestSpawnManager");
+            SpawnManager manager = managerObject.AddComponent<SpawnManager>();
+            Set(manager, "profile", profile);
+            Set(manager, "initializeOnStart", false);
+            boatObject = new GameObject("CameraTarget");
+            boatObject.transform.position = new Vector3(0f, 10f, 0f);
+            cameraObject = new GameObject("TestCamera");
+            DemoCameraFollow follow = cameraObject.AddComponent<DemoCameraFollow>();
+            follow.Target = boatObject.transform;
+            yield return null;
+
+            foreach (bool downward in new[] { false, true })
+            {
+                Set(profile, "travelDownward", downward);
+                follow.SnapToTarget();
+                Assert.That(cameraObject.transform.position.y,
+                    Is.EqualTo(downward ? 7f : 13f).Within(0.001f));
+            }
         }
 
         [UnityTest]
