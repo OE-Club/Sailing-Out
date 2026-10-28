@@ -527,6 +527,10 @@ namespace SailingOut.Editor
 
             GameObject player = new GameObject("Demo Boat", typeof(BoxCollider2D), typeof(Rigidbody2D),
                 typeof(DemoVoyager));
+            SerializedObject voyagerSettings = new SerializedObject(player.GetComponent<DemoVoyager>());
+            voyagerSettings.FindProperty("forwardSpeed").floatValue = 6f;
+            voyagerSettings.FindProperty("horizontalSpeed").floatValue = 7.2f;
+            voyagerSettings.ApplyModifiedPropertiesWithoutUndo();
             if (boatSprite != null)
             {
                 SpriteRenderer renderer = player.AddComponent<SpriteRenderer>();
