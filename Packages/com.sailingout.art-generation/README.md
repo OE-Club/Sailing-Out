@@ -9,6 +9,7 @@ This embedded Unity package supplies the runtime portion of the art/decoration m
 - trigger-based buoy contact that slows the demo boat to half speed for 0.5 seconds;
 - buoy contact also pushes the demo boat to a random horizontal side and removes half a heart;
 - reef contact removes half a heart; the demo HUD starts each run with three hearts;
+- reaching zero hearts stops the boat and displays a full-screen red death screen with a restart button;
 - non-blocking floating-decoration variants and tiled water/foam background;
 - pooled reuse and lifecycle callbacks;
 - distance-based generation stages;

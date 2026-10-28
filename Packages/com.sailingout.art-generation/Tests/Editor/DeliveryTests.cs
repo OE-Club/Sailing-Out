@@ -170,6 +170,58 @@ namespace SailingOut.Tests
             yield return new ExitPlayMode();
         }
 
+        [UnityTest]
+        public IEnumerator AcceptanceCaptureRestartsADeadVoyageThroughDemoControls()
+        {
+            EditorSceneManager.OpenScene(Root + "Generated/Demo/SailingOutGenerationDemo.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var boat = Object.FindAnyObjectByType<DemoVoyager>();
+            var manager = Object.FindAnyObjectByType<SpawnManager>();
+            int seed = manager.CurrentSeed;
+            string destination = Path.Combine(Path.GetTempPath(), "sailingout-soak-test-" + System.Guid.NewGuid());
+            var capture = new GameObject("Test Acceptance Capture").AddComponent<DemoSoakCapture>();
+            typeof(DemoSoakCapture).GetField("destination", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(capture, destination);
+            yield return null;
+            yield return null;
+            MethodInfo damage = typeof(DemoVoyager).GetMethod("TakeCollisionDamage",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            for (int i = 0; i < 6; i++) damage.Invoke(boat, null);
+            Assert.IsTrue(boat.IsDead);
+            float deadline = Time.realtimeSinceStartup + 2f;
+            while ((boat.IsDead || boat.DistanceTravelled <= 0f) && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.IsFalse(boat.IsDead, "The acceptance runner must recover through normal restart controls.");
+            Assert.AreEqual(seed + 1, manager.CurrentSeed);
+            Assert.That(boat.DistanceTravelled, Is.GreaterThan(0f));
+            Object.Destroy(capture.gameObject);
+            if (Directory.Exists(destination)) Directory.Delete(destination, true);
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator AcceptanceCaptureRejectsAStationaryBoat()
+        {
+            EditorSceneManager.OpenScene(Root + "Generated/Demo/SailingOutGenerationDemo.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var boat = Object.FindAnyObjectByType<DemoVoyager>();
+            boat.enabled = false;
+            boat.GetComponent<Rigidbody2D>().simulated = false;
+            string destination = Path.Combine(Path.GetTempPath(), "sailingout-stalled-test-" + System.Guid.NewGuid());
+            var capture = new GameObject("Test Stalled Capture").AddComponent<DemoSoakCapture>();
+            typeof(DemoSoakCapture).GetField("destination", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(capture, destination);
+            yield return new WaitForSecondsRealtime(5.5f);
+            string report = File.ReadAllText(Path.Combine(destination, "soak-report.txt"));
+            StringAssert.Contains("Result: FAIL", report);
+            StringAssert.Contains("No measured voyage progress", report);
+            Object.Destroy(capture.gameObject);
+            Directory.Delete(destination, true);
+            yield return new ExitPlayMode();
+        }
+
         private static string[] Snapshot(SpawnManager manager, float originY, float distance) => manager.GetComponentsInChildren<SpawnableIdentity>()
             .Where(x => (x.transform.position.y - originY) * manager.TravelDirectionSign >= distance)
             .Select(x => $"{x.name}|{x.transform.position.x:R}|{x.transform.position.y:R}")
