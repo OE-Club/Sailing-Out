@@ -7,6 +7,8 @@ This embedded Unity package supplies the runtime portion of the art/decoration m
 - a safe lane at least as wide as the player collider;
 - reef, supply, buoy, and seabird category rules;
 - trigger-based buoy contact that slows the demo boat to half speed for 0.5 seconds;
+- buoy contact also pushes the demo boat to a random horizontal side and removes half a heart;
+- reef contact removes half a heart; the demo HUD starts each run with three hearts;
 - non-blocking floating-decoration variants and tiled water/foam background;
 - pooled reuse and lifecycle callbacks;
 - distance-based generation stages;

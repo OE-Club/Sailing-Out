@@ -13,6 +13,8 @@ namespace SailingOut
         [SerializeField, Min(0f)] private float leanSpeed = 90f;
         [SerializeField, Min(0f)] private float buoySlowdownDuration = 0.5f;
         [SerializeField, Range(0f, 1f)] private float buoySlowdownMultiplier = 0.5f;
+        [SerializeField, Min(0f)] private float buoyPushSpeed = 8f;
+        [SerializeField, Min(0f)] private float buoyPushDuration = 0.25f;
 
         private Rigidbody2D body;
         private SpriteRenderer boatSprite;
@@ -21,12 +23,19 @@ namespace SailingOut
         private RigidbodyConstraints2D originalConstraints;
         private float horizontalInput;
         private float buoySlowdownRemaining;
+        private float buoyPushRemaining;
+        private int buoyPushDirection;
+        private float health;
         private SpawnManager manager;
         private bool guided = true;
         private bool leftHeld;
         private bool rightHeld;
 
         public bool Guided => guided;
+        public const float MaximumHealth = 3f;
+        public const float CollisionDamage = 0.5f;
+        public float Health => health;
+        public int BuoyPushDirection => buoyPushDirection;
         public float DistanceTravelled => Mathf.Max(0f,
             (body.position.y - voyageStart.y) * (manager != null ? manager.TravelDirectionSign : 1f));
 
@@ -37,6 +46,9 @@ namespace SailingOut
             body.linearVelocity = Vector2.zero;
             body.angularVelocity = 0f;
             buoySlowdownRemaining = 0f;
+            buoyPushRemaining = 0f;
+            buoyPushDirection = 0;
+            health = MaximumHealth;
             Physics2D.SyncTransforms();
         }
 
@@ -47,6 +59,7 @@ namespace SailingOut
             boatSprite = GetComponent<SpriteRenderer>();
             voyageStartRotation = body.rotation;
             originalConstraints = body.constraints;
+            health = MaximumHealth;
             body.constraints &= ~RigidbodyConstraints2D.FreezeRotation;
             manager = FindAnyObjectByType<SpawnManager>();
             if (boatSprite != null && manager != null)
@@ -102,6 +115,13 @@ namespace SailingOut
 
             if (buoySlowdownRemaining > 0f)
                 buoySlowdownRemaining = Mathf.Max(0f, buoySlowdownRemaining - Time.fixedDeltaTime);
+            if (buoyPushRemaining > 0f)
+            {
+                position.x = Mathf.Clamp(position.x + buoyPushDirection * buoyPushSpeed * Time.fixedDeltaTime,
+                    -horizontalLimit, horizontalLimit);
+                body.MovePosition(position);
+                buoyPushRemaining = Mathf.Max(0f, buoyPushRemaining - Time.fixedDeltaTime);
+            }
 
             float bowDirection = boatSprite != null && boatSprite.flipY ? -1f : 1f;
             float targetRotation = voyageStartRotation - horizontalInput * bowDirection * maxLeanAngle;
@@ -118,6 +138,24 @@ namespace SailingOut
                 return;
 
             buoySlowdownRemaining = Mathf.Max(0f, buoySlowdownDuration);
+            buoyPushRemaining = Mathf.Max(0f, buoyPushDuration);
+            buoyPushDirection = Random.value < 0.5f ? -1 : 1;
+            TakeCollisionDamage();
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            SpawnableIdentity identity = collision.collider.GetComponentInParent<SpawnableIdentity>();
+            if (identity == null || identity.Definition == null ||
+                identity.Definition.Category != SpawnCategory.Reef)
+                return;
+
+            TakeCollisionDamage();
+        }
+
+        private void TakeCollisionDamage()
+        {
+            health = Mathf.Max(0f, health - CollisionDamage);
         }
     }
 }
