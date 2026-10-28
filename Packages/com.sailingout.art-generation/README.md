@@ -20,7 +20,7 @@ This embedded Unity package supplies the runtime portion of the art/decoration m
 ## Build the art package
 
 1. Open `Assets/SailingOut/Generated/Demo/SailingOutGenerationDemo.unity` and press Play.
-2. Use A/D to steer, Space for guided navigation, R to replay, N for a new seed, F1 for diagnostics.
+2. Click **START SAILING** to begin; use A/D to steer, Space for guided navigation, R to replay, N for a new seed, F1 for diagnostics.
 3. Edit the included original PNGs, preserving their `.meta` files and naming conventions.
 4. Use **Sailing Out > Rebuild Included Demo** to regenerate Prefabs, animations and configs.
 5. The custom builder window also supports selecting alternative source/output folders.

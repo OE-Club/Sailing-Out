@@ -18,7 +18,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\Build-Delivery.ps1
 
 脚本用独立的临时工程导出 `.unitypackage`，在干净工程中导入并检查场景引用，再从导入的场景构建 `Builds/SailingOutDemo/SailingOutDemo.exe`。日志位于 `Logs/delivery-*.log`。
 
-本工程直接打开 `Assets/SailingOut/Generated/Demo/SailingOutGenerationDemo.unity`，点击 Play 即可。请勿把交付包再次导回本工程，以免与已存在的嵌入式模块产生重复程序集。
+本工程直接打开 `Assets/SailingOut/Generated/Demo/SailingOutGenerationDemo.unity`，点击 Play 后在开始界面选择 **START SAILING**。请勿把交付包再次导回本工程，以免与已存在的嵌入式模块产生重复程序集。
 
 操作：A/D 或左右方向键操船，Space 自动导航，R 相同种子重来，N 换种子，F1 查看生成数量。
 

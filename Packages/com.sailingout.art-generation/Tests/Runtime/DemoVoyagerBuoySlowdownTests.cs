@@ -148,6 +148,24 @@ namespace SailingOut.Tests
             Assert.That(boat.Health, Is.EqualTo(DemoVoyager.MaximumHealth).Within(0.001f));
         }
 
+        [UnityTest]
+        public IEnumerator BoatRemainsStoppedUntilStarted()
+        {
+            CreateBoat();
+            boat.SetRunning(false);
+            float startY = boatObject.transform.position.y;
+            Assert.IsFalse(boat.TryBoost());
+            Assert.AreEqual(3, boat.BoostsRemaining);
+
+            yield return new WaitForSeconds(0.15f);
+
+            Assert.IsFalse(boat.IsRunning);
+            Assert.That(boatObject.transform.position.y, Is.EqualTo(startY).Within(0.01f));
+            boat.SetRunning(true);
+            yield return new WaitForSeconds(0.12f);
+            Assert.That(boatObject.transform.position.y, Is.GreaterThan(startY));
+        }
+
         private void CreateBoat()
         {
             boatObject = new GameObject("TestBoat", typeof(Rigidbody2D), typeof(BoxCollider2D),
