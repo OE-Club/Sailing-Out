@@ -91,6 +91,52 @@ namespace SailingOut.Tests
             Assert.That(boatObject.transform.position.y, Is.GreaterThan(deadPosition));
         }
 
+        [UnityTest]
+        public IEnumerator BoostUsesThreeChargesAndCannotRestartWhileActive()
+        {
+            CreateBoat();
+            yield return null;
+
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Assert.AreEqual(3f, GetFloat("boostDuration"));
+            Assert.AreEqual(2f, GetFloat("boostMultiplier"));
+            for (int use = 0; use < 3; use++)
+            {
+                Assert.IsTrue(boat.TryBoost());
+                Assert.AreEqual(2 - use, boat.BoostsRemaining);
+                Assert.IsTrue(boat.IsBoosting);
+                Assert.IsFalse(boat.TryBoost(), "An active boost must not consume another charge.");
+
+                Set(boat, "boostTimeRemaining", 0.01f);
+                yield return new WaitForSeconds(0.05f);
+                Assert.IsFalse(boat.IsBoosting);
+            }
+
+            Assert.AreEqual(0, boat.BoostsRemaining);
+            Assert.IsFalse(boat.TryBoost());
+            boat.ResetVoyage();
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Assert.IsFalse(boat.IsBoosting);
+        }
+
+        [UnityTest]
+        public IEnumerator ResetVoyageRestoresBoostChargesAndCancelsAnActiveBoost()
+        {
+            CreateBoat();
+            yield return null;
+            Assert.IsTrue(boat.TryBoost());
+            Assert.IsTrue(boat.IsBoosting);
+            Assert.AreEqual(2, boat.BoostsRemaining);
+
+            boat.ResetVoyage();
+
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Assert.IsFalse(boat.IsBoosting);
+            Assert.That(boat.DistanceTravelled, Is.EqualTo(0f).Within(0.001f));
+            Assert.IsTrue(boat.TryBoost(), "A new boost must be available immediately after restart.");
+            Assert.AreEqual(2, boat.BoostsRemaining);
+        }
+
         private void CreateBoat()
         {
             boatObject = new GameObject("TestBoat", typeof(Rigidbody2D), typeof(BoxCollider2D),
@@ -135,6 +181,14 @@ namespace SailingOut.Tests
             FieldInfo field = typeof(DemoVoyager).GetField("buoySlowdownRemaining",
                 BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(field);
+            return (float)field.GetValue(boat);
+        }
+
+        private float GetFloat(string fieldName)
+        {
+            FieldInfo field = typeof(DemoVoyager).GetField(fieldName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(field, $"Expected serialized field {fieldName}");
             return (float)field.GetValue(boat);
         }
 
