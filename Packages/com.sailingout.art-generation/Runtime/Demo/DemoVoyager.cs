@@ -80,6 +80,15 @@ namespace SailingOut
             return true;
         }
 
+        public bool TryCollectBoostCharge()
+        {
+            if (IsDead || !isRunning || boostsRemaining >= MaxBoostsPerVoyage)
+                return false;
+
+            boostsRemaining++;
+            return true;
+        }
+
         public void SetRunning(bool running)
         {
             isRunning = running && !IsDead;
@@ -212,6 +221,10 @@ namespace SailingOut
                     break;
                 case SpawnCategory.Supply:
                     health = Mathf.Min(MaximumHealth, health + CollisionDamage);
+                    identity.gameObject.SetActive(false);
+                    break;
+                case SpawnCategory.Lightning:
+                    TryCollectBoostCharge();
                     identity.gameObject.SetActive(false);
                     break;
             }
