@@ -6,7 +6,8 @@ namespace SailingOut
         Reef,
         Seabird,
         Supply,
-        Decoration
+        Decoration,
+        Lightning
     }
 
     public enum SpawnColliderKind

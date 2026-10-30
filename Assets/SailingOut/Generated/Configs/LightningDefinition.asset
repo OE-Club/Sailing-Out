@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131a94b56362e1149b3583fff82bffad, type: 3}
+  m_Name: LightningDefinition
+  m_EditorClassIdentifier: SailingOut.Runtime::SailingOut.SpawnableDefinition
+  category: 5
+  prefab: {fileID: 8898961345252360832, guid: 57d280c75afa3ef40b9328295b078dc5, type: 3}
+  variants:
+  - {fileID: 8898961345252360832, guid: 57d280c75afa3ef40b9328295b078dc5, type: 3}
+  - {fileID: 377351359616419385, guid: cfcc3d97de23a8847b6b08f8036238d4, type: 3}
+  - {fileID: 8231248375849279083, guid: e3b87ceab8ee23641b9067249770b65c, type: 3}
+  weight: 1
+  minimumDistance: 0.25
+  clearanceRadius: 1.4177446
+  collisionBoundaryPadding: 0.125
+  colliderKind: 2
+  blocksPath: 0
+  collectible: 1

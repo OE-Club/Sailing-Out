@@ -42,7 +42,7 @@ namespace SailingOut.Tests
         public void AllArtAndColliderRolesArePresentAndPixelImportsAreCorrect()
         {
             string[] prefabs = AssetDatabase.FindAssets("t:Prefab", new[] { Root + "Generated/Prefabs" });
-            Assert.AreEqual(15,prefabs.Length);
+            Assert.AreEqual(18,prefabs.Length);
             foreach (string guid in prefabs)
             {
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
@@ -54,7 +54,8 @@ namespace SailingOut.Tests
                 else if (identity.Definition.Category == SpawnCategory.Buoy)
                     Assert.IsTrue(collider != null && collider.isTrigger &&
                         !identity.Definition.BlocksPath && !identity.Definition.Collectible);
-                else if (identity.Definition.Category == SpawnCategory.Supply)
+                else if (identity.Definition.Category == SpawnCategory.Supply ||
+                    identity.Definition.Category == SpawnCategory.Lightning)
                     Assert.IsTrue(collider != null && collider.isTrigger && identity.Definition.Collectible);
                 else Assert.IsNull(collider);
                 Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
@@ -69,8 +70,8 @@ namespace SailingOut.Tests
                 Assert.AreEqual(TextureImporterCompression.Uncompressed,importer.textureCompression);
                 Assert.IsFalse(importer.mipmapEnabled);
             }
-            Assert.AreEqual(9, AssetDatabase.FindAssets("t:AnimationClip", new[] { Root + "Generated/Animations" }).Length);
-            Assert.AreEqual(15, Directory.GetFiles(Root + "Art/SpriteSheets", "*.png").Length);
+            Assert.AreEqual(12, AssetDatabase.FindAssets("t:AnimationClip", new[] { Root + "Generated/Animations" }).Length);
+            Assert.AreEqual(18, Directory.GetFiles(Root + "Art/SpriteSheets", "*.png").Length);
         }
 
         [Test]
@@ -82,6 +83,8 @@ namespace SailingOut.Tests
             Assert.AreEqual(0,opening.CountRange(SpawnCategory.Reef,out _));
             Assert.AreEqual(0,opening.CountRange(SpawnCategory.Supply,out _));
             Assert.AreEqual(0,opening.CountRange(SpawnCategory.Decoration,out _));
+            Assert.That(opening.CountRange(SpawnCategory.Lightning,out int maxCharges),Is.EqualTo(0));
+            Assert.AreEqual(1,maxCharges);
             Assert.That(opening.CountRange(SpawnCategory.Buoy,out int maxBuoys),Is.EqualTo(2));
             Assert.AreEqual(4,maxBuoys);
             Assert.That(opening.CountRange(SpawnCategory.Seabird,out int maxBirds),Is.EqualTo(1));
@@ -165,7 +168,7 @@ namespace SailingOut.Tests
                     CollectionAssert.AreEqual(first, replay, "Actual types, variants and positions must repeat after teleport/replay.");
                 }
             }
-            Assert.That(seenCategories.Count, Is.EqualTo(5), "The run must exercise every delivered category.");
+            Assert.That(seenCategories.Count, Is.EqualTo(6), "The run must exercise every delivered category.");
             Object.Destroy(testProfile);
             yield return new ExitPlayMode();
         }

@@ -3,7 +3,7 @@ Add-Type -AssemblyName System.Drawing
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $output = Join-Path $taskRoot 'Delivery'
 New-Item -ItemType Directory -Force -Path $output | Out-Null
-$canvas = [System.Drawing.Bitmap]::new(1120, 840)
+$canvas = [System.Drawing.Bitmap]::new(1120, 980)
 $graphics = [System.Drawing.Graphics]::FromImage($canvas)
 $graphics.Clear([System.Drawing.ColorTranslator]::FromHtml('#122F43'))
 $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
@@ -14,8 +14,8 @@ $ink = [System.Drawing.SolidBrush]::new([System.Drawing.ColorTranslator]::FromHt
 $secondary = [System.Drawing.SolidBrush]::new([System.Drawing.ColorTranslator]::FromHtml('#9AD6CB'))
 $graphics.DrawString('SAILING OUT / PIXEL ATLAS',$font,$ink,32,22)
 $graphics.DrawString('16 PPU  /  ORIGINAL ART  /  3 VARIANTS PER CATEGORY',$small,$secondary,34,70)
-$categories = @('buoy','reef','seabird','supply','decoration')
-for ($row=0;$row -lt 5;$row++) {
+$categories = @('buoy','reef','seabird','supply','decoration','lightning')
+for ($row=0;$row -lt $categories.Count;$row++) {
     $y=112+$row*140
     $graphics.DrawString($categories[$row].ToUpper(),$small,$secondary,36,$y+40)
     for ($variant=1;$variant -le 3;$variant++) {
