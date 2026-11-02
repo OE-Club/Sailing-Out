@@ -22,6 +22,8 @@ namespace SailingOut.Editor
         private static readonly Color32 Yellow = Hex("E8C77D");
         private static readonly Color32 Wood = Hex("AE8059");
         private static readonly Color32 Teal = Hex("409F95");
+        private static readonly Color32 ChargeGreen = Hex("71D96C");
+        private static readonly Color32 ChargeHighlight = Hex("D6F58A");
 
         [MenuItem("Sailing Out/Create Missing Original Pixel Art")]
         public static void Generate()
@@ -33,6 +35,7 @@ namespace SailingOut.Editor
                 Frames("reef", variant, 1, Reef, all);
                 Frames("seabird", variant, 4, Bird, all);
                 Frames("supply", variant, 2, Supply, all);
+                Frames("lightning", variant, 2, Lightning, all);
                 Frames("decoration", variant, 1, Debris, all);
             }
             Write(Water(false), ArtRoot + "/Textures/water_tile.png");
@@ -171,6 +174,40 @@ namespace SailingOut.Editor
             int x = frame == 0 ? 25 : 5;
             c.Line(x,5, x,9,glint); c.Line(x-2,7, x+2,7,glint);
             c.Set(frame == 0 ? 5 : 26, 18, Yellow);
+            return c;
+        }
+
+        private static Canvas Lightning(int variant, int frame)
+        {
+            var c = new Canvas(32, 32);
+            int x = variant - 2;
+            Color32 glow = frame == 0 ? ChargeGreen : ChargeHighlight;
+            if (variant == 1)
+            {
+                c.Oval(5, 5, 22, 22, Dark);
+                c.Oval(7, 7, 18, 18, Teal);
+            }
+            else if (variant == 2)
+            {
+                c.Line(4, 15, 8, 15, glow);
+                c.Line(24, 15, 28, 15, glow);
+                c.Line(16, 1, 16, 5, glow);
+                c.Line(16, 26, 16, 30, glow);
+            }
+            else
+            {
+                c.Poly(Dark, 16, 2, 29, 16, 16, 29, 3, 16);
+                c.Poly(Teal, 16, 5, 26, 16, 16, 26, 6, 16);
+            }
+
+            c.Poly(Ink, 14+x, 4, 23+x, 4, 18+x, 13, 25+x, 13,
+                11+x, 29, 14+x, 18, 8+x, 18);
+            c.Poly(ChargeGreen, 15+x, 6, 21+x, 6, 16+x, 15, 22+x, 15,
+                13+x, 25, 16+x, 16, 11+x, 16);
+            c.Line(16+x, 7, 18+x, 7, ChargeHighlight);
+            c.Line(15+x, 18, 14+x, 21, ChargeHighlight);
+            c.Set(frame == 0 ? 6 : 25, 8, ChargeHighlight);
+            c.Set(frame == 0 ? 25 : 6, 23, glow);
             return c;
         }
 

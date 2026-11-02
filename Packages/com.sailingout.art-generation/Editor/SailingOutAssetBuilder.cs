@@ -16,7 +16,7 @@ namespace SailingOut.Editor
         private const string DefaultSourceFolder = "Assets/SailingOut/Art/Sprites";
         private const string DefaultOutputFolder = "Assets/SailingOut/Generated";
         private static readonly Regex SpriteName = new Regex(
-            "^(buoy|reef|seabird|supply|decoration)_([0-9]{2})_([0-9]{2})$",
+            "^(buoy|reef|seabird|supply|decoration|lightning)_([0-9]{2})_([0-9]{2})$",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         private static readonly Regex TiledSpriteName = new Regex(
             "^(water_tile|foam_tile)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
@@ -46,7 +46,7 @@ namespace SailingOut.Editor
         {
             EditorGUILayout.LabelField("Pixel Art Package Builder", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "Use names such as reef_01_01.png. Categories: buoy, reef, seabird, supply, decoration. " +
+                "Use names such as reef_01_01.png. Categories: buoy, reef, seabird, supply, decoration, lightning. " +
                 "Variant and frame numbers must use two digits. Add water_tile.png and foam_tile.png, " +
                 "then select those and the project boat Sprite for the demo.",
                 MessageType.Info);
@@ -70,6 +70,7 @@ namespace SailingOut.Editor
             EditorGUILayout.LabelField("Reef: 3 variants x 1 frame");
             EditorGUILayout.LabelField("Seabird: 3 variants x 4 frames");
             EditorGUILayout.LabelField("Supply: 3 variants x 2 frames");
+            EditorGUILayout.LabelField("Lightning: 3 variants x 2 frames");
             EditorGUILayout.LabelField("Decoration: 3 static variants");
 
             EditorGUILayout.Space();
@@ -362,7 +363,8 @@ namespace SailingOut.Editor
                 serialized.FindProperty("collisionBoundaryPadding").floatValue = 0.125f;
                 serialized.FindProperty("colliderKind").enumValueIndex = (int)ColliderKind(pair.Key);
                 serialized.FindProperty("blocksPath").boolValue = pair.Key == SpawnCategory.Reef;
-                serialized.FindProperty("collectible").boolValue = pair.Key == SpawnCategory.Supply;
+                serialized.FindProperty("collectible").boolValue = pair.Key == SpawnCategory.Supply ||
+                    pair.Key == SpawnCategory.Lightning;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(definition);
 
@@ -377,13 +379,15 @@ namespace SailingOut.Editor
         private static void AddCollider(GameObject root, SpawnCategory category, Sprite sprite)
         {
             if (category != SpawnCategory.Reef && category != SpawnCategory.Supply &&
+                category != SpawnCategory.Lightning &&
                 category != SpawnCategory.Buoy)
                 return;
 
             CircleCollider2D collider = root.AddComponent<CircleCollider2D>();
             Vector2 size = sprite.bounds.size;
             collider.radius = Mathf.Max(0.1f, Mathf.Min(size.x, size.y) * 0.4f);
-            collider.isTrigger = category == SpawnCategory.Supply || category == SpawnCategory.Buoy;
+            collider.isTrigger = category == SpawnCategory.Supply || category == SpawnCategory.Lightning ||
+                category == SpawnCategory.Buoy;
         }
 
         private static AnimationClip CreateAnimationClip(IReadOnlyList<Sprite> frames, string path, float fps)
@@ -471,16 +475,16 @@ namespace SailingOut.Editor
             float[] starts = { 0f, 120f, 300f, 600f };
             int[,] ranges =
             {
-                { 2, 4, 0, 0, 1, 2, 0, 0, 0, 0 },
-                { 2, 4, 1, 2, 1, 2, 1, 2, 1, 2 },
-                { 3, 5, 2, 4, 2, 3, 1, 2, 1, 3 },
-                { 4, 6, 4, 6, 2, 4, 1, 2, 1, 3 }
+                { 2, 4, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1 },
+                { 2, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1 },
+                { 3, 5, 2, 4, 2, 3, 1, 2, 1, 3, 1, 1 },
+                { 4, 6, 4, 6, 2, 4, 1, 2, 1, 3, 1, 1 }
             };
 
             SpawnCategory[] categories =
             {
                 SpawnCategory.Buoy, SpawnCategory.Reef, SpawnCategory.Seabird,
-                SpawnCategory.Supply, SpawnCategory.Decoration
+                SpawnCategory.Supply, SpawnCategory.Decoration, SpawnCategory.Lightning
             };
             stages.arraySize = starts.Length;
             for (int stageIndex = 0; stageIndex < starts.Length; stageIndex++)
@@ -580,6 +584,7 @@ namespace SailingOut.Editor
             {
                 case SpawnCategory.Buoy:
                 case SpawnCategory.Supply:
+                case SpawnCategory.Lightning:
                     return 2;
                 case SpawnCategory.Seabird:
                     return 4;
@@ -593,7 +598,8 @@ namespace SailingOut.Editor
         {
             if (category == SpawnCategory.Reef)
                 return SpawnColliderKind.Solid;
-            return category == SpawnCategory.Supply || category == SpawnCategory.Buoy
+            return category == SpawnCategory.Supply || category == SpawnCategory.Lightning ||
+                category == SpawnCategory.Buoy
                 ? SpawnColliderKind.Trigger
                 : SpawnColliderKind.None;
         }

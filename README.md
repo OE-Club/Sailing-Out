@@ -48,7 +48,7 @@ The self-contained wind sailing prototype lives in `Assets/Scripts/Sailing/`. It
 
 ## Art and decoration generation
 
-The embedded package `Packages/com.sailingout.art-generation/` owns the pixel-art import workflow and deterministic endless decoration/interactable generation. Original PNG art, sprite sheets, 15 Prefabs, animation clips, configs and a runnable demo are included in `Assets/SailingOut/`. Use **Sailing Out > Rebuild Included Demo** after editing art. `SpawnManager` reads the player `Collider2D` and does not take over player movement or interaction effects. See `Assets/SailingOut/Documentation/接入与制作指南.md` for the delivery package, seed reproduction and integration workflow.
+The embedded package `Packages/com.sailingout.art-generation/` owns the pixel-art import workflow and deterministic endless decoration/interactable generation. Original PNG art, sprite sheets, 18 Prefabs, animation clips, configs and a runnable demo are included in `Assets/SailingOut/`. Use **Sailing Out > Rebuild Included Demo** after editing art. `SpawnManager` reads the player `Collider2D` and does not take over player movement or interaction effects. See `Assets/SailingOut/Documentation/接入与制作指南.md` for the delivery package, seed reproduction and integration workflow.
 
 ## Infinite sea
 

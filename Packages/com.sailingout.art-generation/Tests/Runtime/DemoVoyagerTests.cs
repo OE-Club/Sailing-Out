@@ -10,7 +10,9 @@ namespace SailingOut.Tests
     {
         private GameObject boatObject;
         private GameObject managerObject;
+        private GameObject pickupObject;
         private GenerationProfile profile;
+        private SpawnableDefinition pickupDefinition;
         private GameObject cameraObject;
 
         [UnityTearDown]
@@ -20,8 +22,12 @@ namespace SailingOut.Tests
                 Object.Destroy(boatObject);
             if (managerObject != null)
                 Object.Destroy(managerObject);
+            if (pickupObject != null)
+                Object.Destroy(pickupObject);
             if (profile != null)
                 Object.Destroy(profile);
+            if (pickupDefinition != null)
+                Object.Destroy(pickupDefinition);
             if (cameraObject != null)
                 Object.Destroy(cameraObject);
             yield return null;
@@ -86,6 +92,41 @@ namespace SailingOut.Tests
                 Is.EqualTo(6f).Within(0.001f));
             Assert.That(GetFloat(boatObject.GetComponent<DemoVoyager>(), "horizontalSpeed"),
                 Is.EqualTo(7.2f).Within(0.001f));
+        }
+
+        [UnityTest]
+        public IEnumerator LightningPickupRestoresOneChargeUpToThreeAndResetsWithVoyage()
+        {
+            boatObject = new GameObject("TestBoat", typeof(Rigidbody2D), typeof(BoxCollider2D));
+            DemoVoyager boat = boatObject.AddComponent<DemoVoyager>();
+            pickupDefinition = ScriptableObject.CreateInstance<SpawnableDefinition>();
+            Set(pickupDefinition, "category", SpawnCategory.Lightning);
+            pickupObject = new GameObject("Lightning", typeof(CircleCollider2D), typeof(SpawnableIdentity));
+            pickupObject.transform.position = new Vector3(100f, 0f, 0f);
+            Set(pickupObject.GetComponent<SpawnableIdentity>(), "definition", pickupDefinition);
+            Collider2D pickupCollider = pickupObject.GetComponent<Collider2D>();
+            pickupCollider.isTrigger = true;
+            yield return null;
+
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Assert.IsTrue(boat.TryBoost());
+            Assert.AreEqual(2, boat.BoostsRemaining);
+            typeof(DemoVoyager).GetMethod("OnTriggerEnter2D",
+                BindingFlags.Instance | BindingFlags.NonPublic).Invoke(boat, new object[] { pickupCollider });
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Assert.IsFalse(pickupObject.activeSelf);
+
+            pickupObject.SetActive(true);
+            typeof(DemoVoyager).GetMethod("OnTriggerEnter2D",
+                BindingFlags.Instance | BindingFlags.NonPublic).Invoke(boat, new object[] { pickupCollider });
+            Assert.AreEqual(3, boat.BoostsRemaining);
+            Assert.IsFalse(pickupObject.activeSelf);
+
+            Set(boat, "boostTimeRemaining", 0f);
+            Assert.IsTrue(boat.TryBoost());
+            Assert.AreEqual(2, boat.BoostsRemaining);
+            boat.ResetVoyage();
+            Assert.AreEqual(3, boat.BoostsRemaining);
         }
 
         private static float GetFloat(object target, string fieldName)

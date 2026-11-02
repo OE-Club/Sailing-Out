@@ -29,7 +29,7 @@ namespace SailingOut
 
         private static readonly SpawnCategory[] Categories =
         {
-            SpawnCategory.Reef, SpawnCategory.Supply, SpawnCategory.Buoy,
+            SpawnCategory.Reef, SpawnCategory.Supply, SpawnCategory.Lightning, SpawnCategory.Buoy,
             SpawnCategory.Seabird, SpawnCategory.Decoration
         };
 
@@ -262,7 +262,7 @@ namespace SailingOut
                         maxLaneOffset, safeLaneWidth, radius + boatHalfLength))
                         continue;
                 }
-                else if (category == SpawnCategory.Supply)
+                else if (category == SpawnCategory.Supply || category == SpawnCategory.Lightning)
                 {
                     float nearLaneRange = Mathf.Max(0f, safeLaneWidth * 0.5f - radius);
                     x = Mathf.Clamp(laneX + random.Range(-nearLaneRange, nearLaneRange), minX, maxX);

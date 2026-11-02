@@ -113,7 +113,7 @@ namespace SailingOut
             string failure = totalDistance < 2000f ? "Insufficient measured travel" :
                 movingSeconds < 570f ? "Insufficient time in active motion" :
                 maxDistance < 600f || !denseCaptured ? "Dense progression was not reached" :
-                seenCategories.Count != 5 ? "Not all five generated categories were observed" :
+                seenCategories.Count != 6 ? "Not all six generated categories were observed" :
                 peakActive > manager.Profile.MaxActiveObjects ||
                 peakManaged > manager.Profile.MaxActiveObjects + manager.Profile.MaxPooledObjects
                     ? "Configured object limits exceeded" :

@@ -53,7 +53,7 @@ namespace SailingOut.Editor
         {
             EditorSceneManager.OpenScene(Scene);
             var manager = UnityEngine.Object.FindAnyObjectByType<SpawnManager>();
-            if (manager == null || manager.Profile == null || manager.Profile.Definitions.Count != 5)
+            if (manager == null || manager.Profile == null || manager.Profile.Definitions.Count != 6)
                 throw new Exception("Imported demo is missing its generation configuration.");
             foreach (SpawnableDefinition definition in manager.Profile.Definitions)
                 foreach (GameObject prefab in definition.Variants)
