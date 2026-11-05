@@ -26,7 +26,7 @@ The hooks block local updates to `main`, including commits, cherry-picks, merge 
 
 Install Git LFS and run `git lfs install --skip-repo` to configure its filters without replacing the reviewed hooks. The installed pre-push hook passes allowed pushes to `git lfs pre-push`.
 
-GitHub also enforces this workflow through the active `Require pull requests for main` ruleset on the default branch (`main`), with no bypass actors. Direct pushes, force pushes, and branch deletion are blocked. A PR is required; an approving review is not required. Local hooks must be enabled separately in each clone.
+GitHub also enforces this workflow through the active `Require pull requests for main` ruleset on the default branch (`main`), with no bypass actors. Direct pushes, force pushes, and branch deletion are blocked. This ruleset requires a PR but does not require an approving review; the project review and merge policy below still applies. Local hooks must be enabled separately in each clone.
 
 `AGENTS.md` is the standard entry point for agents and includes the Chinese code review requirement. Read `agents.me` for the full ownership, Unity, and integration rules.
 
@@ -35,6 +35,10 @@ Run the hook regression checks with `python3 -m unittest discover -s tests -p 't
 GitHub Actions runs metadata/configuration validation and repository regression
 tests on pull requests and `main`. These are repository checks, not Unity
 compilation or Edit/Play tests. See [CI scope and Unity licensing requirements](docs/CI.md).
+
+## PR 审批与合并
+
+SO 新增 cchhh（GitHub：[@ccchh4rr](https://github.com/ccchh4rr)，玩家移动负责人）为 PR 审批人，现有审批人的权限继续保留。审批和合并须先满足 Codex Review 代码审查通过、CI 通过且没有合并冲突；仅安全审查卡住时可按仓库保护规则采用例外。权限范围及例外的完整边界见 [SO 的 PR 审批与合并规则](docs/PR_APPROVALS.md)。
 
 ## Open and run
 
