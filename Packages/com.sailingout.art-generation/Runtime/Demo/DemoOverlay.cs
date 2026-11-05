@@ -23,6 +23,9 @@ namespace SailingOut
         private GUIStyle deathTitle;
         private GUIStyle restartButton;
         private Texture2D boostIconTexture;
+        private Texture2D startButtonNormalTexture;
+        private Texture2D startButtonHoverTexture;
+        private Texture2D startButtonActiveTexture;
 
         private void Start()
         {
@@ -39,6 +42,12 @@ namespace SailingOut
         {
             if (boostIconTexture != null)
                 Destroy(boostIconTexture);
+            if (startButtonNormalTexture != null)
+                Destroy(startButtonNormalTexture);
+            if (startButtonHoverTexture != null)
+                Destroy(startButtonHoverTexture);
+            if (startButtonActiveTexture != null)
+                Destroy(startButtonActiveTexture);
         }
 
         private void HandleKey(Event input)
@@ -141,13 +150,20 @@ namespace SailingOut
             };
             startButton ??= new GUIStyle(GUI.skin.button)
             {
-                fontSize = 21,
+                fontSize = 25,
                 fontStyle = FontStyle.Bold,
                 alignment = TextAnchor.MiddleCenter,
                 normal = { textColor = new Color(0.08f, 0.16f, 0.22f) },
                 hover = { textColor = new Color(0.06f, 0.13f, 0.2f) },
                 active = { textColor = new Color(0.04f, 0.1f, 0.16f) }
             };
+            startButtonNormalTexture ??= CreateSolidTexture(new Color32(255, 211, 62, 255));
+            startButtonHoverTexture ??= CreateSolidTexture(new Color32(255, 239, 132, 255));
+            startButtonActiveTexture ??= CreateSolidTexture(new Color32(255, 151, 55, 255));
+            startButton.normal.background = startButtonNormalTexture;
+            startButton.hover.background = startButtonHoverTexture;
+            startButton.active.background = startButtonActiveTexture;
+            startButton.focused.background = startButtonHoverTexture;
             startControls ??= new GUIStyle(GUI.skin.label)
             {
                 fontSize = 14,
@@ -160,12 +176,31 @@ namespace SailingOut
             GUI.color = Color.white;
             GUI.Label(new Rect(24f, 130f, width - 48f, 72f), "SAILING OUT", startTitle);
             GUI.Label(new Rect(24f, 202f, width - 48f, 32f), "SURVIVE THE OPEN WATER", startSubtitle);
-            GUI.backgroundColor = new Color(1f, 0.49f, 0.25f);
-            if (GUI.Button(new Rect((width - 250f) * 0.5f, 275f, 250f, 58f), "START SAILING", startButton))
+            Rect button = new Rect((width - 310f) * 0.5f, 272f, 310f, 68f);
+            GUI.color = new Color(0.015f, 0.055f, 0.085f, 0.95f);
+            GUI.DrawTexture(new Rect(button.x - 8f, button.y + 8f, button.width + 16f, button.height + 16f),
+                Texture2D.whiteTexture);
+            GUI.color = new Color(0.25f, 0.92f, 0.94f);
+            GUI.DrawTexture(new Rect(button.x - 5f, button.y - 5f, button.width + 10f, button.height + 10f),
+                Texture2D.whiteTexture);
+            GUI.color = Color.white;
+            if (GUI.Button(button, "START SAILING", startButton))
                 BeginGame();
-            GUI.backgroundColor = Color.white;
             GUI.Label(new Rect(24f, 366f, width - 48f, 30f),
                 "A / D  STEER     W  BOOST     SPACE  AUTO NAVIGATION", startControls);
+        }
+
+        private static Texture2D CreateSolidTexture(Color32 color)
+        {
+            var texture = new Texture2D(1, 1, TextureFormat.RGBA32, false)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            texture.SetPixel(0, 0, color);
+            texture.Apply(false, true);
+            return texture;
         }
 
         private void DrawBoosts(float width)
