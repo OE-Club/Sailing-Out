@@ -122,7 +122,7 @@ namespace SailingOut
 
         private void DrawStartScreen(float width)
         {
-            GUI.color = new Color(0.008f, 0.045f, 0.065f, 0.82f);
+            GUI.color = new Color(0.015f, 0.14f, 0.25f, 0.9f);
             GUI.DrawTexture(new Rect(0f, 0f, width, 540f), Texture2D.whiteTexture);
             GUI.color = Color.white;
 
@@ -131,33 +131,36 @@ namespace SailingOut
                 fontSize = 54,
                 fontStyle = FontStyle.Bold,
                 alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = new Color(0.92f, 0.98f, 0.91f) }
+                normal = { textColor = new Color(1f, 0.88f, 0.38f) }
             };
             startSubtitle ??= new GUIStyle(GUI.skin.label)
             {
                 fontSize = 18,
                 alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = new Color(0.57f, 0.86f, 0.86f) }
+                normal = { textColor = new Color(0.38f, 0.9f, 1f) }
             };
             startButton ??= new GUIStyle(GUI.skin.button)
             {
                 fontSize = 21,
                 fontStyle = FontStyle.Bold,
                 alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = new Color(0.025f, 0.12f, 0.14f) },
-                hover = { textColor = new Color(0.02f, 0.08f, 0.1f) },
-                active = { textColor = Color.black }
+                normal = { textColor = new Color(0.08f, 0.16f, 0.22f) },
+                hover = { textColor = new Color(0.06f, 0.13f, 0.2f) },
+                active = { textColor = new Color(0.04f, 0.1f, 0.16f) }
             };
             startControls ??= new GUIStyle(GUI.skin.label)
             {
                 fontSize = 14,
                 alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = new Color(0.82f, 0.92f, 0.88f) }
+                normal = { textColor = new Color(0.9f, 0.98f, 1f) }
             };
 
+            GUI.color = new Color(1f, 0.48f, 0.24f, 0.95f);
+            GUI.DrawTexture(new Rect((width - 104f) * 0.5f, 116f, 104f, 4f), Texture2D.whiteTexture);
+            GUI.color = Color.white;
             GUI.Label(new Rect(24f, 130f, width - 48f, 72f), "SAILING OUT", startTitle);
             GUI.Label(new Rect(24f, 202f, width - 48f, 32f), "SURVIVE THE OPEN WATER", startSubtitle);
-            GUI.backgroundColor = new Color(0.35f, 0.94f, 0.62f);
+            GUI.backgroundColor = new Color(1f, 0.49f, 0.25f);
             if (GUI.Button(new Rect((width - 250f) * 0.5f, 275f, 250f, 58f), "START SAILING", startButton))
                 BeginGame();
             GUI.backgroundColor = Color.white;
