@@ -15,3 +15,5 @@ Read `agents.me` and `README.md` before editing. `agents.me` contains the projec
 ## Code reviews
 
 代码审查必须使用中文撰写，包括审查摘要、问题说明和修改建议；代码标识符、文件路径和命令保持原样。
+
+PR 审批与合并须遵守 [SO 的 PR 审批与合并规则](docs/PR_APPROVALS.md)：Codex Review 通过、CI 通过且没有合并冲突。安全审查卡住的例外不能绕过 GitHub 保护。cchhh 的 GitHub 账号已确认为 `ccchh4rr`；文档授权不构成给助手的永久审批许可，每次提交 `APPROVE` 仍需用户针对当次 PR 和对应提交的明确确认。
