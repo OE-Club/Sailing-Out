@@ -519,7 +519,10 @@ namespace SailingOut.Editor
             camera.allowMSAA = false;
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(0.015f, 0.18f, 0.27f, 1f);
-            cameraObject.transform.position = new Vector3(0f, 3f * profile.TravelDirectionSign, -10f);
+            SerializedObject cameraFollow = new SerializedObject(cameraObject.GetComponent<DemoCameraFollow>());
+            cameraFollow.FindProperty("offset").vector3Value = new Vector3(0f, -3.5f, -10f);
+            cameraFollow.ApplyModifiedPropertiesWithoutUndo();
+            cameraObject.transform.position = new Vector3(0f, 3.5f * profile.TravelDirectionSign, -10f);
             GameObject background = new GameObject("Tiled Sea Background");
             background.transform.SetParent(cameraObject.transform, false);
             background.transform.localPosition = new Vector3(0f, 0f, 10f);
