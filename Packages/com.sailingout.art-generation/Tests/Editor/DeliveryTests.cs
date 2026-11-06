@@ -116,6 +116,11 @@ namespace SailingOut.Tests
 
             // Freeze physics and clone the profile so replay checks never edit a delivered asset.
             var boat = Object.FindAnyObjectByType<DemoVoyager>();
+            float horizontalLimit = (float)typeof(DemoVoyager)
+                .GetField("horizontalLimit", BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetValue(boat);
+            Assert.AreEqual(9.5f, horizontalLimit,
+                "The included demo should allow the boat to sail closer to either side of the screen.");
             boat.enabled = false;
             boat.ResetVoyage();
             var testProfile = Object.Instantiate(manager.Profile);

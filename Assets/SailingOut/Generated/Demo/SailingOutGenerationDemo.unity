@@ -321,7 +321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: SailingOut.Runtime::SailingOut.DemoVoyager
   forwardSpeed: 6
   horizontalSpeed: 7.2
-  horizontalLimit: 7
+  horizontalLimit: 9.5
 --- !u!50 &343676988
 Rigidbody2D:
   serializedVersion: 5
