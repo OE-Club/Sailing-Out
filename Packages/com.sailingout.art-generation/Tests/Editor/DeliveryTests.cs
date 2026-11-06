@@ -163,6 +163,11 @@ namespace SailingOut.Tests
 
             // Freeze physics and clone the profile so replay checks never edit a delivered asset.
             var boat = Object.FindAnyObjectByType<DemoVoyager>();
+            var cameraFollow = camera.GetComponent<DemoCameraFollow>();
+            cameraFollow.SnapToTarget();
+            Assert.That(camera.transform.position.y,
+                Is.EqualTo(boat.transform.position.y + manager.TravelDirectionSign * 3.5f).Within(0.001f),
+                "The included demo should place the boat slightly above the screen center.");
             boat.enabled = false;
             boat.ResetVoyage();
             var testProfile = Object.Instantiate(manager.Profile);
