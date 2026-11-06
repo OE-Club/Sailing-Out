@@ -37,8 +37,8 @@ MonoBehaviour:
   - startDistance: 0
     counts:
     - category: 0
-      minimum: 2
-      maximum: 4
+      minimum: 0
+      maximum: 6
     - category: 1
       minimum: 0
       maximum: 0
@@ -58,11 +58,11 @@ MonoBehaviour:
   - startDistance: 120
     counts:
     - category: 0
-      minimum: 2
-      maximum: 4
+      minimum: 0
+      maximum: 6
     - category: 1
-      minimum: 1
-      maximum: 2
+      minimum: 0
+      maximum: 3
     - category: 2
       minimum: 1
       maximum: 2
@@ -79,11 +79,11 @@ MonoBehaviour:
   - startDistance: 300
     counts:
     - category: 0
-      minimum: 3
-      maximum: 5
+      minimum: 1
+      maximum: 7
     - category: 1
-      minimum: 2
-      maximum: 4
+      minimum: 0
+      maximum: 6
     - category: 2
       minimum: 2
       maximum: 3
@@ -100,11 +100,11 @@ MonoBehaviour:
   - startDistance: 600
     counts:
     - category: 0
-      minimum: 4
-      maximum: 6
+      minimum: 2
+      maximum: 8
     - category: 1
-      minimum: 4
-      maximum: 6
+      minimum: 2
+      maximum: 8
     - category: 2
       minimum: 2
       maximum: 4

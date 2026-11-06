@@ -264,7 +264,11 @@ namespace SailingOut
                 }
                 else if (category == SpawnCategory.Supply || category == SpawnCategory.Lightning)
                 {
-                    float nearLaneRange = Mathf.Max(0f, safeLaneWidth * 0.5f - radius);
+                    // Supplies may sit off-center while remaining near the navigable lane.
+                    // Lightning keeps its tighter placement for predictable pickup access.
+                    float nearLaneRange = category == SpawnCategory.Supply
+                        ? safeLaneWidth * 0.5f
+                        : Mathf.Max(0f, safeLaneWidth * 0.5f - radius);
                     x = Mathf.Clamp(laneX + random.Range(-nearLaneRange, nearLaneRange), minX, maxX);
                 }
                 else
