@@ -29,11 +29,13 @@ namespace SailingOut.Tests
                 object[] args = { new SpawnableDefinition[0], temporary, 314159 };
                 var profile = (GenerationProfile)build.Invoke(null, args);
                 Assert.IsTrue(profile.TravelDownward, "A fresh generated demo must sail downward.");
+                AssertSparseSupplyStages(profile);
                 var settings = new SerializedObject(profile);
                 settings.FindProperty("travelDownward").boolValue = false;
                 settings.ApplyModifiedPropertiesWithoutUndo();
                 profile = (GenerationProfile)build.Invoke(null, args);
                 Assert.IsTrue(profile.TravelDownward, "Rebuilding must restore the demo direction.");
+                AssertSparseSupplyStages(profile);
             }
             finally { AssetDatabase.DeleteAsset(temporary); }
         }
@@ -89,6 +91,28 @@ namespace SailingOut.Tests
             Assert.AreEqual(4,maxBuoys);
             Assert.That(opening.CountRange(SpawnCategory.Seabird,out int maxBirds),Is.EqualTo(1));
             Assert.AreEqual(2,maxBirds);
+        }
+
+        [Test]
+        public void DeliveredProfileLimitsSuppliesWithoutReducingLightning()
+        {
+            GenerationProfile profile = AssetDatabase.LoadAssetAtPath<GenerationProfile>(
+                Root + "Generated/Configs/DefaultGenerationProfile.asset");
+            Assert.IsNotNull(profile);
+            AssertSparseSupplyStages(profile);
+        }
+
+        private static void AssertSparseSupplyStages(GenerationProfile profile)
+        {
+            foreach (float distance in new[] { 120f, 300f, 600f })
+            {
+                GenerationStage stage = profile.GetStage(distance);
+                Assert.IsNotNull(stage);
+                Assert.AreEqual(0, stage.CountRange(SpawnCategory.Supply, out int maxSupplies));
+                Assert.AreEqual(1, maxSupplies);
+                Assert.AreEqual(1, stage.CountRange(SpawnCategory.Lightning, out int maxCharges));
+                Assert.AreEqual(1, maxCharges);
+            }
         }
 
         [UnityTest]

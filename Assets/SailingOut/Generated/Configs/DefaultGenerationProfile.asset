@@ -67,8 +67,8 @@ MonoBehaviour:
       minimum: 1
       maximum: 2
     - category: 3
-      minimum: 1
-      maximum: 2
+      minimum: 0
+      maximum: 1
     - category: 4
       minimum: 1
       maximum: 2
@@ -88,8 +88,8 @@ MonoBehaviour:
       minimum: 2
       maximum: 3
     - category: 3
-      minimum: 1
-      maximum: 2
+      minimum: 0
+      maximum: 1
     - category: 4
       minimum: 1
       maximum: 3
@@ -109,8 +109,8 @@ MonoBehaviour:
       minimum: 2
       maximum: 4
     - category: 3
-      minimum: 1
-      maximum: 2
+      minimum: 0
+      maximum: 1
     - category: 4
       minimum: 1
       maximum: 3
