@@ -29,11 +29,15 @@ namespace SailingOut.Tests
                 object[] args = { new SpawnableDefinition[0], temporary, 314159 };
                 var profile = (GenerationProfile)build.Invoke(null, args);
                 Assert.IsTrue(profile.TravelDownward, "A fresh generated demo must sail downward.");
+                AssertSparseSupplyStages(profile);
+                AssertIrregularObstacleStages(profile);
                 var settings = new SerializedObject(profile);
                 settings.FindProperty("travelDownward").boolValue = false;
                 settings.ApplyModifiedPropertiesWithoutUndo();
                 profile = (GenerationProfile)build.Invoke(null, args);
                 Assert.IsTrue(profile.TravelDownward, "Rebuilding must restore the demo direction.");
+                AssertSparseSupplyStages(profile);
+                AssertIrregularObstacleStages(profile);
             }
             finally { AssetDatabase.DeleteAsset(temporary); }
         }
@@ -85,10 +89,53 @@ namespace SailingOut.Tests
             Assert.AreEqual(0,opening.CountRange(SpawnCategory.Decoration,out _));
             Assert.That(opening.CountRange(SpawnCategory.Lightning,out int maxCharges),Is.EqualTo(0));
             Assert.AreEqual(1,maxCharges);
-            Assert.That(opening.CountRange(SpawnCategory.Buoy,out int maxBuoys),Is.EqualTo(2));
-            Assert.AreEqual(4,maxBuoys);
+            Assert.That(opening.CountRange(SpawnCategory.Buoy,out int maxBuoys),Is.EqualTo(0));
+            Assert.AreEqual(6,maxBuoys);
             Assert.That(opening.CountRange(SpawnCategory.Seabird,out int maxBirds),Is.EqualTo(1));
             Assert.AreEqual(2,maxBirds);
+        }
+
+        [Test]
+        public void DeliveredProfileLimitsSuppliesWithoutReducingLightning()
+        {
+            GenerationProfile profile = AssetDatabase.LoadAssetAtPath<GenerationProfile>(
+                Root + "Generated/Configs/DefaultGenerationProfile.asset");
+            Assert.IsNotNull(profile);
+            AssertSparseSupplyStages(profile);
+            AssertIrregularObstacleStages(profile);
+        }
+
+        private static void AssertIrregularObstacleStages(GenerationProfile profile)
+        {
+            float[] distances = { 0f, 120f, 300f, 600f };
+            int[,] expected =
+            {
+                { 0, 6, 0, 0 },
+                { 0, 6, 0, 3 },
+                { 1, 7, 0, 6 },
+                { 2, 8, 2, 8 }
+            };
+            for (int i = 0; i < distances.Length; i++)
+            {
+                GenerationStage stage = profile.GetStage(distances[i]);
+                Assert.AreEqual(expected[i, 0], stage.CountRange(SpawnCategory.Buoy, out int maxBuoys));
+                Assert.AreEqual(expected[i, 1], maxBuoys);
+                Assert.AreEqual(expected[i, 2], stage.CountRange(SpawnCategory.Reef, out int maxReefs));
+                Assert.AreEqual(expected[i, 3], maxReefs);
+            }
+        }
+
+        private static void AssertSparseSupplyStages(GenerationProfile profile)
+        {
+            foreach (float distance in new[] { 120f, 300f, 600f })
+            {
+                GenerationStage stage = profile.GetStage(distance);
+                Assert.IsNotNull(stage);
+                Assert.AreEqual(0, stage.CountRange(SpawnCategory.Supply, out int maxSupplies));
+                Assert.AreEqual(1, maxSupplies);
+                Assert.AreEqual(1, stage.CountRange(SpawnCategory.Lightning, out int maxCharges));
+                Assert.AreEqual(1, maxCharges);
+            }
         }
 
         [UnityTest]
@@ -121,12 +168,18 @@ namespace SailingOut.Tests
                 .GetValue(boat);
             Assert.AreEqual(9.5f, horizontalLimit,
                 "The included demo should allow the boat to sail closer to either side of the screen.");
+            var cameraFollow = camera.GetComponent<DemoCameraFollow>();
+            cameraFollow.SnapToTarget();
+            Assert.That(camera.transform.position.y,
+                Is.EqualTo(boat.transform.position.y + manager.TravelDirectionSign * 3.5f).Within(0.001f),
+                "The included demo should place the boat slightly above the screen center.");
             boat.enabled = false;
             boat.ResetVoyage();
             var testProfile = Object.Instantiate(manager.Profile);
             manager.Configure(testProfile, camera, boat.GetComponent<Collider2D>(), false);
             float originY = boat.transform.position.y;
             var seenCategories = new HashSet<SpawnCategory>();
+            bool sawOffCenterSupply = false;
             foreach (bool downward in new[] { false, true })
             {
                 var settings = new SerializedObject(testProfile);
@@ -148,6 +201,9 @@ namespace SailingOut.Tests
                         {
                             var a = objects[i];
                             seenCategories.Add(a.Definition.Category);
+                            if (a.Definition.Category == SpawnCategory.Supply &&
+                                Mathf.Abs(a.transform.position.x - manager.GetSafeLaneCenter(a.transform.position.y)) > 0.3f)
+                                sawOffCenterSupply = true;
                             float radius = a.Definition.ClearanceRadius;
                             for (int j = i + 1; j < objects.Length; j++)
                             {
@@ -174,6 +230,7 @@ namespace SailingOut.Tests
                 }
             }
             Assert.That(seenCategories.Count, Is.EqualTo(6), "The run must exercise every delivered category.");
+            Assert.IsTrue(sawOffCenterSupply, "Supplies should not all line up with the lane center.");
             Object.Destroy(testProfile);
             yield return new ExitPlayMode();
         }

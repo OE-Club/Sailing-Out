@@ -475,10 +475,10 @@ namespace SailingOut.Editor
             float[] starts = { 0f, 120f, 300f, 600f };
             int[,] ranges =
             {
-                { 2, 4, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1 },
-                { 2, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1 },
-                { 3, 5, 2, 4, 2, 3, 1, 2, 1, 3, 1, 1 },
-                { 4, 6, 4, 6, 2, 4, 1, 2, 1, 3, 1, 1 }
+                { 0, 6, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1 },
+                { 0, 6, 0, 3, 1, 2, 0, 1, 1, 2, 1, 1 },
+                { 1, 7, 0, 6, 2, 3, 0, 1, 1, 3, 1, 1 },
+                { 2, 8, 2, 8, 2, 4, 0, 1, 1, 3, 1, 1 }
             };
 
             SpawnCategory[] categories =
@@ -519,7 +519,10 @@ namespace SailingOut.Editor
             camera.allowMSAA = false;
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(0.015f, 0.18f, 0.27f, 1f);
-            cameraObject.transform.position = new Vector3(0f, 3f * profile.TravelDirectionSign, -10f);
+            SerializedObject cameraFollow = new SerializedObject(cameraObject.GetComponent<DemoCameraFollow>());
+            cameraFollow.FindProperty("offset").vector3Value = new Vector3(0f, -3.5f, -10f);
+            cameraFollow.ApplyModifiedPropertiesWithoutUndo();
+            cameraObject.transform.position = new Vector3(0f, 3.5f * profile.TravelDirectionSign, -10f);
             GameObject background = new GameObject("Tiled Sea Background");
             background.transform.SetParent(cameraObject.transform, false);
             background.transform.localPosition = new Vector3(0f, 0f, 10f);

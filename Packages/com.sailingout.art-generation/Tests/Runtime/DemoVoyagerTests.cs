@@ -77,7 +77,7 @@ namespace SailingOut.Tests
                 Set(profile, "travelDownward", downward);
                 follow.SnapToTarget();
                 Assert.That(cameraObject.transform.position.y,
-                    Is.EqualTo(downward ? 7f : 13f).Within(0.001f));
+                    Is.EqualTo(downward ? 6.5f : 13.5f).Within(0.001f));
             }
         }
 
