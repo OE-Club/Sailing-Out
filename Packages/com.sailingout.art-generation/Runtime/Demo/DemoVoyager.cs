@@ -10,7 +10,7 @@ namespace SailingOut
 
         [SerializeField, Min(0f)] private float forwardSpeed = 6f;
         [SerializeField, Min(0f)] private float horizontalSpeed = 7.2f;
-        [SerializeField, Min(0f)] private float horizontalLimit = 7f;
+        [SerializeField, Min(0f)] private float horizontalLimit = 9.5f;
         [SerializeField, Min(1f)] private float boostDuration = 3f;
         [SerializeField, Min(1f)] private float boostMultiplier = 2f;
         [SerializeField, Min(0f)] private float maxLeanAngle = 12f;

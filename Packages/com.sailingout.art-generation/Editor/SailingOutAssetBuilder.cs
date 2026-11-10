@@ -537,6 +537,7 @@ namespace SailingOut.Editor
             SerializedObject voyagerSettings = new SerializedObject(player.GetComponent<DemoVoyager>());
             voyagerSettings.FindProperty("forwardSpeed").floatValue = 6f;
             voyagerSettings.FindProperty("horizontalSpeed").floatValue = 7.2f;
+            voyagerSettings.FindProperty("horizontalLimit").floatValue = 9.5f;
             voyagerSettings.ApplyModifiedPropertiesWithoutUndo();
             if (boatSprite != null)
             {
